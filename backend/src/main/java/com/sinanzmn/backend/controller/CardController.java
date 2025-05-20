@@ -1,6 +1,7 @@
 package com.sinanzmn.backend.controller;
 
 import com.sinanzmn.backend.model.Card;
+import com.sinanzmn.backend.model.Project;
 import com.sinanzmn.backend.model.User;
 import com.sinanzmn.backend.repository.UserRepository;
 import com.sinanzmn.backend.security.JwtUtil;
@@ -95,6 +96,15 @@ public class CardController {
         card.setGithubUrl(cardRequest.getGithubUrl());
         card.setWebsiteUrl(cardRequest.getWebsiteUrl());
         card.setSkills(cardRequest.getSkills());
+        if (cardRequest.getProjects() != null) {
+            card.getProjects().clear();
+            for (Project p : cardRequest.getProjects()) {
+                p.setCard(card);
+                card.getProjects().add(p);
+            }
+        } else {
+            card.getProjects().clear();
+        }
         card.setSelectedDesignId(cardRequest.getSelectedDesignId());
 
         Card savedCard = cardService.saveCard(card);

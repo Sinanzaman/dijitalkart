@@ -1,8 +1,8 @@
 package com.sinanzmn.backend.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -37,7 +37,13 @@ public class Card {
     @JsonIgnore
     private User user;
 
-    public Card() {}
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projects = new ArrayList<>();
+
+    public Card() {
+    }
+
+    // Getters & Setters
 
     public Long getId() {
         return id;
@@ -133,5 +139,13 @@ public class Card {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }
