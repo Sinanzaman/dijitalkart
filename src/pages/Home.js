@@ -16,6 +16,11 @@ export default function MainScreen() {
     if (!loading && !user) {
       navigate("/login");
     }
+
+    const savedPage = localStorage.getItem("activePage");
+    if (savedPage) {
+      setActivePage(savedPage);
+    }
   }, [loading, user, navigate]);
 
   const pages = [
@@ -25,6 +30,7 @@ export default function MainScreen() {
     { label: "İsteklerim", key: "requests" },
     { label: "Kullanıcı Ara", key: "search" },
   ];
+
   const bottomPages = ["Tema:", "Hesap Ayarları"];
 
   const handleLogout = async () => {
@@ -33,6 +39,7 @@ export default function MainScreen() {
 
     try {
       await logout();
+      localStorage.removeItem("activePage");
       alert("Başarıyla çıkış yaptınız!");
       navigate("/login");
     } catch (error) {
@@ -45,9 +52,13 @@ export default function MainScreen() {
     setMenuOpen((prev) => !prev);
   };
 
+  const handlePageChange = (key) => {
+    setActivePage(key);
+    localStorage.setItem("activePage", key);
+  };
+
   if (loading) return <div>Yükleniyor...</div>;
 
-  // İçerik render fonksiyonu
   const renderContent = () => {
     switch (activePage) {
       case "carddesign":
@@ -74,7 +85,7 @@ export default function MainScreen() {
 
   return (
     <div className={`main-container ${theme}`}>
-      <div className="logo-container" onClick={() => setActivePage("home")}>
+      <div className="logo-container" onClick={() => handlePageChange("home")}>
         <FlipLogo theme={theme} />
       </div>
 
@@ -103,7 +114,7 @@ export default function MainScreen() {
             <button
               key={key}
               className={`sidebar-btn ${activePage === key ? "active" : ""}`}
-              onClick={() => setActivePage(key)}
+              onClick={() => handlePageChange(key)}
             >
               {label}
             </button>
@@ -151,7 +162,6 @@ export default function MainScreen() {
         </button>
       )}
 
-      {/* Burada sağdaki büyük içerik alanı */}
       <div
         className={`content ${
           menuOpen ? "content-with-sidebar" : "content-full"

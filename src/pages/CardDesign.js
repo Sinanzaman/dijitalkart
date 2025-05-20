@@ -12,6 +12,14 @@ const CardDesign = () => {
   const [website, setWebsite] = useState("");
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
+  const [projects, setProjects] = useState([]);
+  const [showProjectForm, setShowProjectForm] = useState(false);
+  const [newProject, setNewProject] = useState({
+    title: "",
+    description: "",
+    imageUrl: "",
+    projectUrl: "",
+  });
   const [message, setMessage] = useState("");
 
   const API_URL = "http://localhost:8080/api/cards";
@@ -39,6 +47,7 @@ const CardDesign = () => {
           setGithub(data.githubUrl || "");
           setWebsite(data.websiteUrl || "");
           setSkills(data.skills || []);
+          setProjects(data.projects || []); // backend tarafında projects varsa
         } else {
           console.error("Kullanıcı kartı getirilemedi.");
         }
@@ -61,6 +70,20 @@ const CardDesign = () => {
     setSkills(skills.filter((skill) => skill !== skillToRemove));
   };
 
+  const addProject = () => {
+    if (newProject.title.trim() === "" || newProject.projectUrl.trim() === "") {
+      alert("Proje başlığı ve linki zorunludur.");
+      return;
+    }
+    setProjects([...projects, newProject]);
+    setNewProject({ title: "", description: "", imageUrl: "", projectUrl: "" });
+    setShowProjectForm(false);
+  };
+
+  const removeProject = (indexToRemove) => {
+    setProjects(projects.filter((_, index) => index !== indexToRemove));
+  };
+
   const handleSave = async () => {
     const cardData = {
       fullName,
@@ -71,7 +94,8 @@ const CardDesign = () => {
       linkedinUrl: linkedin || null,
       githubUrl: github || null,
       websiteUrl: website || null,
-      skills: skills,
+      skills,
+      projects,
       selectedDesignId: 1 || null,
     };
 
@@ -88,7 +112,6 @@ const CardDesign = () => {
         body: JSON.stringify(cardData),
       });
 
-      // Burada JSON döneceği garantisi yoksa önce status kontrol et, sonra parse et:
       if (response.ok) {
         let responseData = null;
         const text = await response.text();
@@ -102,9 +125,7 @@ const CardDesign = () => {
         if (text) {
           errorData = JSON.parse(text);
         }
-        setMessage(
-          "Kaydetme hatası: " + (errorData?.message || response.statusText)
-        );
+        setMessage("Kaydetme hatası: " + (errorData?.message || response.statusText));
       }
     } catch (error) {
       setMessage("İstek sırasında hata oluştu: " + error.message);
@@ -159,6 +180,33 @@ const CardDesign = () => {
               <li>Henüz eklenmedi</li>
             )}
           </ul>
+        </div>
+
+        <div>
+          <b>Projeler:</b>
+          {projects.length > 0 ? (
+            projects.map((project, index) => (
+              <div key={index} className="project-item">
+                <h4>{project.title}</h4>
+                <p>{project.description}</p>
+                {project.imageUrl && (
+                  <img
+                    src={project.imageUrl}
+                    alt={project.title}
+                    style={{ maxWidth: "150px", maxHeight: "100px" }}
+                    onError={(e) => (e.target.style.display = "none")}
+                  />
+                )}
+                <p>
+                  <a href={project.projectUrl} target="_blank" rel="noreferrer">
+                    Projeyi Gör
+                  </a>
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>Henüz proje eklenmedi</p>
+          )}
         </div>
       </div>
 
@@ -233,6 +281,8 @@ const CardDesign = () => {
             placeholder="https://example.com"
           />
         </label>
+
+        {/* Yetenekler */}
         <label>
           Yetenekler:
           <div className="skills-input">
@@ -260,14 +310,121 @@ const CardDesign = () => {
           ))}
         </div>
 
-        <button className="save-btn" onClick={handleSave}>
+        {/* Proje Ekleme */}
+        <div style={{ marginTop: "20px" }}>
+          {!showProjectForm && (
+            <button type="button" onClick={() => setShowProjectForm(true)}>
+              Proje Ekle
+            </button>
+          )}
+
+          {showProjectForm && (
+            <div className="project-form" style={{ marginTop: "10px" }}>
+              <label>
+                Proje Başlığı:
+                <input
+                  type="text"
+                  value={newProject.title}
+                  onChange={(e) =>
+                    setNewProject({ ...newProject, title: e.target.value })
+                  }
+                  placeholder="Proje başlığı"
+                />
+              </label>
+              <label>
+                Proje Açıklaması:
+                <textarea
+                  value={newProject.description}
+                  onChange={(e) =>
+                    setNewProject({ ...newProject, description: e.target.value })
+                  }
+                  rows={2}
+                  placeholder="Proje açıklaması"
+                />
+              </label>
+              <label>
+                Proje Resmi URL:
+                <input
+                  type="text"
+                  value={newProject.imageUrl}
+                  onChange={(e) =>
+                    setNewProject({ ...newProject, imageUrl: e.target.value })
+                  }
+                  placeholder="https://..."
+                />
+              </label>
+              <label>
+                Proje Linki:
+                <input
+                  type="url"
+                  value={newProject.projectUrl}
+                  onChange={(e) =>
+                    setNewProject({ ...newProject, projectUrl: e.target.value })
+                  }
+                  placeholder="https://..."
+                />
+              </label>
+
+              <button type="button" onClick={addProject}>
+                Kaydet
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowProjectForm(false)}
+                style={{ marginLeft: "10px" }}
+              >
+                İptal
+              </button>
+            </div>
+          )}
+
+          {/* Proje Listesi */}
+          <div>
+            {projects.length > 0 ? (
+              projects.map((project, index) => (
+                <div
+                  key={index}
+                  className="project-item"
+                  style={{
+                    border: "1px solid #ccc",
+                    padding: "10px",
+                    marginTop: "10px",
+                    borderRadius: "5px",
+                  }}
+                >
+                  <h4>{project.title}</h4>
+                  <p>{project.description}</p>
+                  {project.imageUrl && (
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      style={{ maxWidth: "150px", maxHeight: "100px" }}
+                      onError={(e) => (e.target.style.display = "none")}
+                    />
+                  )}
+                  <p>
+                    <a href={project.projectUrl} target="_blank" rel="noreferrer">
+                      Projeyi Gör
+                    </a>
+                  </p>
+                  <button onClick={() => removeProject(index)}>Sil</button>
+                </div>
+              ))
+            ) : (
+              <p>Henüz proje eklenmedi</p>
+            )}
+          </div>
+        </div>
+
+        {/* Kaydet Butonu */}
+        <button className="save-btn" onClick={handleSave} style={{ marginTop: "20px" }}>
           Kaydet
         </button>
 
         {message && (
           <div
             className="message"
-            style={{ color: message.includes("hata") ? "red" : "green" }}
+            style={{ color: message.includes("hata") ? "red" : "green", marginTop: "10px" }}
           >
             {message}
           </div>

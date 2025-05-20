@@ -15,6 +15,8 @@ public class Card {
 
     private String fullName;
     private String jobTitle;
+
+    @Column(columnDefinition = "TEXT")
     private String about;
     private String phone;
     private String profileImageUrl;
