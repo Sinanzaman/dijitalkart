@@ -1,47 +1,74 @@
-// src/UserContext.js
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, getUserData, setUserTheme } from "../firebase";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [firebaseUser, setFirebaseUser] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null); // Backend'den gelen kullanıcı objesi
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState("");
-  const [username, setUsername] = useState("");
+  const [theme, setTheme] = useState("light");
 
+  const logout = async () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
+  // Uygulama açıldığında localStorage'den token kontrolü yapabiliriz:
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setFirebaseUser(currentUser);
-
-      if (currentUser) {
-        const data = await getUserData();
-        setUserData(data);
-        setTheme(data?.theme || "light");
-        setUsername(data?.username || "Kullanıcı Adı");
-      } else {
-        setUserData(null);
-        setTheme("light");
-      }
-
+    const token = localStorage.getItem("token");
+    if (!token) {
       setLoading(false);
-    });
+      return;
+    }
 
-    return () => unsubscribe();
+    // Token varsa backend'den user bilgilerini çekelim
+    fetch("http://localhost:8080/api/auth/user", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Backend'in beklediği Authorization header
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Yetkisiz veya token geçersiz");
+        return res.json();
+      })
+      .then((data) => {
+        setUser(data); // Backend'den dönen user objesi
+        setTheme(data.theme || "light"); // backend'de tema alanı varsa
+      })
+      .catch(() => {
+        localStorage.removeItem("token"); // Geçersiz token varsa temizle
+        setUser(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  // Tema değiştirme fonksiyonu
-  const toggleTheme = () => {
+  // Tema değiştirme fonksiyonu - backend ile eşitleyebilirsin
+  const toggleTheme = async () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    setUserTheme(newTheme);
-    // İstersen userData veya firestore'a da tema bilgisini kaydet
+
+    if (user) {
+      const token = localStorage.getItem("token");
+      try {
+        await fetch("http://localhost:8080/api/auth/user/theme", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ theme: newTheme }),
+        });
+      } catch (error) {
+        console.error("Tema güncelleme hatası:", error);
+      }
+    }
   };
 
   return (
-    <UserContext.Provider value={{ firebaseUser, userData, loading, theme, toggleTheme, username }}>
+    <UserContext.Provider
+      value={{ user, setUser, loading, theme, setTheme, toggleTheme, logout }}
+    >
       {children}
     </UserContext.Provider>
   );

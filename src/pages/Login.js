@@ -1,76 +1,51 @@
-import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
-import { useNavigate, Link } from 'react-router-dom';
+// src/pages/Login.jsx
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import "../CSS/Login.css";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Şifre gösterme durumu
+  const { setUser, setTheme } = useUser();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loginStatus, setLoginStatus] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoginStatus(null);
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setLoginStatus('success');
-      navigate('/home');
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        setUser(data.user);
+        console.log("data.user: "+data.user.theme);
+        setTheme(data.user.theme);
+        navigate("/home");
+      } else {
+        setLoginStatus("error");
+      }
     } catch (error) {
-      console.error(error);
-      setLoginStatus('error');
+      alert("Hata: " + error.message);
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#f3f2ef',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: 'white',
-          padding: 40,
-          borderRadius: 8,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          width: '100%',
-          maxWidth: 400,
-          boxSizing: 'border-box',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        }}
-      >
-        <h1
-          style={{
-            marginBottom: 24,
-            fontSize: 28,
-            color: '#0a66c2',
-            fontWeight: '700',
-          }}
-        >
-          DijitalKart'a Giriş Yap
-        </h1>
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">DijitalKart'a Giriş Yap</h1>
 
-        <form style={{ width: '100%' }} onSubmit={handleLogin} noValidate>
-          <label
-            htmlFor="email"
-            style={{
-              fontWeight: '600',
-              fontSize: 14,
-              color: '#333',
-              marginBottom: 8,
-              display: 'block',
-            }}
-          >
+        <form className="login-form" onSubmit={handleLogin} noValidate>
+          <label htmlFor="email" className="login-label">
             Email adresi
           </label>
           <input
@@ -80,136 +55,51 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              marginBottom: 20,
-              borderRadius: 4,
-              border: '1px solid #ccc',
-              fontSize: 16,
-              boxSizing: 'border-box',
-              outlineColor: '#0a66c2',
-              transition: 'border-color 0.3s ease',
-            }}
-            onFocus={(e) => (e.target.style.borderColor = '#0a66c2')}
-            onBlur={(e) => (e.target.style.borderColor = '#ccc')}
+            className="login-input"
           />
 
-          <label
-            htmlFor="password"
-            style={{
-              fontWeight: '600',
-              fontSize: 14,
-              color: '#333',
-              marginBottom: 8,
-              display: 'block',
-            }}
-          >
+          <label htmlFor="password" className="login-label">
             Şifre
           </label>
-          <div style={{ position: 'relative', marginBottom: 20 }}>
+          <div className="login-password-wrapper">
             <input
               id="password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               placeholder="Şifrenizi girin"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{
-                width: '100%',
-                padding: '12px 40px 12px 16px', // Sağ tarafta buton için boşluk bıraktık
-                borderRadius: 4,
-                border: '1px solid #ccc',
-                fontSize: 16,
-                boxSizing: 'border-box',
-                outlineColor: '#0a66c2',
-                transition: 'border-color 0.3s ease',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#0a66c2')}
-              onBlur={(e) => (e.target.style.borderColor = '#ccc')}
+              className="login-input"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: 'absolute',
-                right: 10,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'none',
-                border: 'none',
-                color: '#0a66c2',
-                fontWeight: '600',
-                cursor: 'pointer',
-                fontSize: 14,
-                padding: 0,
-                userSelect: 'none',
-              }}
-              aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}
+              className="login-toggle-password"
+              aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
             >
-              {showPassword ? 'Gizle' : 'Göster'}
+              {!showPassword ? <FiEyeOff size={25} /> : <FiEye size={25} />}
             </button>
           </div>
 
-          <button
-            type="submit"
-            style={{
-              width: '100%',
-              backgroundColor: '#0a66c2',
-              color: 'white',
-              padding: '14px 0',
-              borderRadius: 4,
-              border: 'none',
-              fontWeight: '600',
-              fontSize: 16,
-              cursor: 'pointer',
-              transition: 'background-color 0.3s ease',
-              marginBottom: 16,
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#004182')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = '#0a66c2')}
-          >
+          <button type="submit" className="login-button">
             Giriş Yap
           </button>
         </form>
 
-        {loginStatus === 'error' && (
-          <p
-            style={{
-              color: 'red',
-              marginTop: 10,
-              fontSize: 14,
-              textAlign: 'center',
-            }}
-          >
-            ❌ Email veya şifre hatalı.
-          </p>
+        {loginStatus === "error" && (
+          <p className="login-error-message">❌ Email veya şifre hatalı.</p>
         )}
 
-        <p style={{ marginTop: 30, fontSize: 14, color: '#555', textAlign: 'center' }}>
-          Hesabınız yoksa,{' '}
-          <Link
-            to="/register"
-            style={{
-              color: '#0a66c2',
-              textDecoration: 'none',
-              fontWeight: '600',
-            }}
-          >
+        <p className="login-bottom-text">
+          Hesabınız yoksa,{" "}
+          <Link to="/register" className="login-link">
             oluşturun
           </Link>
           .
         </p>
 
-        <p style={{ fontSize: 14, marginTop: 10, textAlign: 'center' }}>
-          <Link
-            to="/forgot-password"
-            style={{
-              color: '#0a66c2',
-              textDecoration: 'none',
-              fontWeight: '600',
-            }}
-          >
+        <p className="login-bottom-text">
+          <Link to="/forgot-password" className="login-link">
             Şifrenizi mi unuttunuz?
           </Link>
         </p>

@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, saveUserToFirestore } from "../firebase";
 import { Link } from "react-router-dom";
 
 export default function Register() {
@@ -9,6 +7,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [registerStatus, setRegisterStatus] = useState(null);
   const [usernameError, setUsernameError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const validateUsername = (value) => {
     const valid = /^[a-zA-Z0-9_]{1,30}$/.test(value);
@@ -28,18 +27,31 @@ export default function Register() {
 
     if (!validateUsername(username)) return;
 
+    setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      await saveUserToFirestore(userCredential.user.uid, email, username);
-      setRegisterStatus("success");
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, username, password }),
+      });
+
+      if (response.ok) {
+        setRegisterStatus("success");
+        setEmail("");
+        setUsername("");
+        setPassword("");
+      } else {
+        // Backend'den gelen hata mesajını alabiliriz
+        const data = await response.json();
+        setRegisterStatus(data.message || "error");
+      }
     } catch (error) {
       console.error(error);
       setRegisterStatus("error");
     }
+    setLoading(false);
   };
 
   return (
@@ -122,20 +134,32 @@ export default function Register() {
 
           <button
             type="submit"
-            style={buttonStyle}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#004182")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0a66c2")}
+            disabled={loading}
+            style={{
+              ...buttonStyle,
+              opacity: loading ? 0.6 : 1,
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) e.target.style.backgroundColor = "#004182";
+            }}
+            onMouseLeave={(e) => {
+              if (!loading) e.target.style.backgroundColor = "#0a66c2";
+            }}
           >
-            Kayıt Ol
+            {loading ? "Kayıt oluyor..." : "Kayıt Ol"}
           </button>
         </form>
 
         {registerStatus === "success" && (
           <p style={{ color: "green", marginTop: 20 }}>✅ Kayıt başarılı!</p>
         )}
+        {registerStatus && registerStatus !== "success" && registerStatus !== "error" && (
+          <p style={{ color: "red", marginTop: 20 }}>{registerStatus}</p>
+        )}
         {registerStatus === "error" && (
           <p style={{ color: "red", marginTop: 20 }}>
-            ❌ Kayıt başarısız. Bu email zaten kullanılıyor olabilir.
+            ❌ Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.
           </p>
         )}
 

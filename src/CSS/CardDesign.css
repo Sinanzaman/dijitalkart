@@ -1,0 +1,123 @@
+.card-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: inherit;
+}
+
+.card-page .preview,
+.card-page .form {
+  background-color: var(--container-bg);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.card-page .preview img {
+  width: 50%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  object-fit: cover;
+}
+
+.card-page .preview .placeholder {
+  height: 180px;
+  background-color: #eee;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.card-page .preview a {
+  margin-right: 10px;
+  color: var(--button-color);
+  text-decoration: none;
+}
+
+.card-page .preview ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.card-page .preview ul li {
+  background-color: var(--button-bg);
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  color: inherit;
+}
+
+.card-page .form label {
+  display: block;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.card-page .form input,
+.card-page .form textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background-color: white;
+  color: black;
+}
+
+.main-container.dark .card-page .form input,
+.main-container.dark .card-page .form textarea {
+  background-color: #222;
+  color: #eee;
+  border: 1px solid #444;
+}
+
+.card-page .form .skills-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.card-page .form .skills-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px 5px 0 0;
+  border-radius: 15px;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.card-page .form .skills-badge:hover {
+  background-color: var(--button-hover-bg);
+  color: var(--button-hover-color);
+}
+
+.card-page .form button.save-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: var(--button-hover-bg);
+  color: var(--button-hover-color);
+  transition: background-color 0.3s ease;
+}
+
+.card-page .form .message {
+  margin-top: 15px;
+  font-weight: 600;
+}

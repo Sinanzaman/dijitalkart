@@ -1,67 +1,48 @@
-import { useState } from 'react';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../firebase';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import "../CSS/ForgotPassword.css"; // ✅ CSS dosyasını dahil etmeyi unutma
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleReset = async (e) => {
     e.preventDefault();
     setMessage(null);
     setError(null);
+    setLoading(true);
 
     try {
-      await sendPasswordResetEmail(auth, email);
-      setMessage('Şifre sıfırlama maili gönderildi. Lütfen emailinizi kontrol edin.');
+      const response = await fetch("http://localhost:8080/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setMessage("Şifre sıfırlama maili gönderildi. Lütfen emailinizi kontrol edin.");
+      } else if (response.status === 404) {
+        setError("Bu email adresine kayıtlı kullanıcı bulunamadı.");
+      } else {
+        setError("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
     } catch (err) {
-      setError('Bir hata oluştu veya email kayıtlı değil.');
+      setError("Sunucuya ulaşılamıyor. Lütfen internet bağlantınızı kontrol edin.");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#f3f2ef',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: 'white',
-          padding: 40,
-          borderRadius: 8,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          width: '100%',
-          maxWidth: 400,
-          boxSizing: 'border-box',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <h1 style={{ marginBottom: 24, fontSize: 28, color: '#0a66c2' }}>
-          Şifremi Unuttum
-        </h1>
+    <div className="forgot-container">
+      <div className="forgot-box">
+        <h1 className="forgot-title">Şifremi Unuttum</h1>
 
-        <form style={{ width: '100%' }} onSubmit={handleReset}>
-          <label
-            htmlFor="email"
-            style={{
-              fontWeight: '600',
-              fontSize: 14,
-              color: '#333',
-              marginBottom: 8,
-              display: 'block',
-            }}
-          >
+        <form className="forgot-form" onSubmit={handleReset} noValidate>
+          <label htmlFor="email" className="forgot-label">
             Email adresinizi girin
           </label>
           <input
@@ -71,51 +52,23 @@ export default function ForgotPassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              marginBottom: 20,
-              borderRadius: 4,
-              border: '1px solid #ccc',
-              fontSize: 16,
-              boxSizing: 'border-box',
-              outlineColor: '#0a66c2',
-            }}
+            className="forgot-input"
           />
 
           <button
             type="submit"
-            style={{
-              width: '100%',
-              backgroundColor: '#0a66c2',
-              color: 'white',
-              padding: '14px 0',
-              borderRadius: 4,
-              border: 'none',
-              fontWeight: '600',
-              fontSize: 16,
-              cursor: 'pointer',
-              transition: 'background-color 0.3s ease',
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#004182')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = '#0a66c2')}
+            disabled={loading}
+            className="forgot-button"
           >
-            Şifre Sıfırlama Maili Gönder
+            {loading ? "Gönderiliyor..." : "Şifre Sıfırlama Maili Gönder"}
           </button>
         </form>
 
-        {message && <p style={{ color: 'green', marginTop: 20 }}>{message}</p>}
-        {error && <p style={{ color: 'red', marginTop: 20 }}>{error}</p>}
+        {message && <p className="forgot-success">{message}</p>}
+        {error && <p className="forgot-error">{error}</p>}
 
-        <p style={{ marginTop: 30, fontSize: 14, color: '#555' }}>
-          <Link
-            to="/login"
-            style={{
-              color: '#0a66c2',
-              textDecoration: 'none',
-              fontWeight: '600',
-            }}
-          >
+        <p className="forgot-link">
+          <Link to="/login" className="forgot-back-link">
             Giriş sayfasına dön
           </Link>
         </p>
