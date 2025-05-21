@@ -88,10 +88,12 @@ public class CardController {
         Card card = cardService.getCardByUser(user).orElse(new Card());
         card.setUser(user);
         card.setProfileImageUrl(cardRequest.getProfileImageUrl());
+        card.setBackgroundImageUrl(cardRequest.getBackgroundImageUrl());
         card.setFullName(cardRequest.getFullName());
         card.setJobTitle(cardRequest.getJobTitle());
         card.setAbout(cardRequest.getAbout());
         card.setPhone(cardRequest.getPhone());
+        card.setEmail(cardRequest.getEmail());
         card.setLinkedinUrl(cardRequest.getLinkedinUrl());
         card.setGithubUrl(cardRequest.getGithubUrl());
         card.setWebsiteUrl(cardRequest.getWebsiteUrl());

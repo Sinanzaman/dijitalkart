@@ -19,7 +19,9 @@ public class Card {
     @Column(columnDefinition = "TEXT")
     private String about;
     private String phone;
+    private String email;
     private String profileImageUrl;
+    private String backgroundImageUrl;
 
     private String linkedinUrl;
     private String githubUrl;
@@ -85,12 +87,28 @@ public class Card {
         this.phone = phone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getBackgroundImageUrl() {
+        return backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
     }
 
     public String getLinkedinUrl() {

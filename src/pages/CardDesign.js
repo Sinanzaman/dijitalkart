@@ -3,9 +3,11 @@ import "../CSS/CardDesign.css";
 
 const CardDesign = () => {
   const [profileImage, setProfileImage] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState("");
   const [fullName, setFullName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [about, setAbout] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
@@ -39,9 +41,11 @@ const CardDesign = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileImage(data.profileImageUrl || "");
+          setBackgroundImage(data.backgroundImageUrl || "");
           setFullName(data.fullName || "");
           setJobTitle(data.jobTitle || "");
           setAbout(data.about || "");
+          setEmail(data.email || "");
           setPhone(data.phone || "");
           setLinkedin(data.linkedinUrl || "");
           setGithub(data.githubUrl || "");
@@ -81,7 +85,9 @@ const CardDesign = () => {
   };
 
   const removeProject = (indexToRemove) => {
-    setProjects(projects.filter((_, index) => index !== indexToRemove));
+    if (window.confirm("Bu projeyi silmek istediğinize emin misiniz?")) {
+      setProjects(projects.filter((_, index) => index !== indexToRemove));
+    }
   };
 
   const handleSave = async () => {
@@ -89,7 +95,9 @@ const CardDesign = () => {
       fullName,
       jobTitle,
       about,
+      email,
       phone,
+      backgroundImageUrl: backgroundImage || null,
       profileImageUrl: profileImage || null,
       linkedinUrl: linkedin || null,
       githubUrl: github || null,
@@ -125,7 +133,9 @@ const CardDesign = () => {
         if (text) {
           errorData = JSON.parse(text);
         }
-        setMessage("Kaydetme hatası: " + (errorData?.message || response.statusText));
+        setMessage(
+          "Kaydetme hatası: " + (errorData?.message || response.statusText)
+        );
       }
     } catch (error) {
       setMessage("İstek sırasında hata oluştu: " + error.message);
@@ -135,20 +145,34 @@ const CardDesign = () => {
   return (
     <div className="card-page">
       {/* Önizleme Alanı */}
-      <div className="preview">
-        {profileImage ? (
-          <img
-            src={profileImage}
-            alt="Profil"
-            onError={(e) => (e.target.style.display = "none")}
-          />
-        ) : (
-          <div className="placeholder">Profil Resmi Yok</div>
-        )}
+      <div
+        className="preview"
+        style={{
+          backgroundImage: backgroundImage
+            ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${backgroundImage})`
+            : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="image-wrapper">
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt="Profil"
+            />
+          ) : (
+            <div className="placeholder-text">Profil Resmi Yok</div>
+          )}
+        </div>
 
         <h2>{fullName || "Ad Soyad"}</h2>
         <h4>{jobTitle || "İş Pozisyonu"}</h4>
         <p>{about || "Hakkında kısmı burada görünecek."}</p>
+        <p>
+          <b>Email:</b> {email || "-"}
+        </p>
         <p>
           <b>Telefon:</b> {phone || "-"}
         </p>
@@ -222,6 +246,16 @@ const CardDesign = () => {
           />
         </label>
         <label>
+          Arka Plan Resmi URL:
+          <input
+            type="text"
+            value={backgroundImage}
+            onChange={(e) => setBackgroundImage(e.target.value)}
+            placeholder="https://..."
+          />
+        </label>
+
+        <label>
           Ad Soyad:
           <input
             type="text"
@@ -252,6 +286,15 @@ const CardDesign = () => {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="+90 555 555 5555"
+          />
+        </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="example@email.com"
           />
         </label>
         <label>
@@ -336,7 +379,10 @@ const CardDesign = () => {
                 <textarea
                   value={newProject.description}
                   onChange={(e) =>
-                    setNewProject({ ...newProject, description: e.target.value })
+                    setNewProject({
+                      ...newProject,
+                      description: e.target.value,
+                    })
                   }
                   rows={2}
                   placeholder="Proje açıklaması"
@@ -403,7 +449,11 @@ const CardDesign = () => {
                     />
                   )}
                   <p>
-                    <a href={project.projectUrl} target="_blank" rel="noreferrer">
+                    <a
+                      href={project.projectUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       Projeyi Gör
                     </a>
                   </p>
@@ -417,14 +467,21 @@ const CardDesign = () => {
         </div>
 
         {/* Kaydet Butonu */}
-        <button className="save-btn" onClick={handleSave} style={{ marginTop: "20px" }}>
+        <button
+          className="save-btn"
+          onClick={handleSave}
+          style={{ marginTop: "20px" }}
+        >
           Kaydet
         </button>
 
         {message && (
           <div
             className="message"
-            style={{ color: message.includes("hata") ? "red" : "green", marginTop: "10px" }}
+            style={{
+              color: message.includes("hata") ? "red" : "green",
+              marginTop: "10px",
+            }}
           >
             {message}
           </div>
