@@ -1,9 +1,13 @@
+import { jwtDecode } from "jwt-decode";
 import React, { useState, useEffect } from "react";
 import "../CSS/CardDesign.css";
+import { uploadImageAndReplaceOld } from "../firebase";
 
 const CardDesign = () => {
   const [profileImage, setProfileImage] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
+  const [profileFile, setProfileFile] = useState(null);
+  const [backgroundFile, setBackgroundFile] = useState(null);
   const [fullName, setFullName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [about, setAbout] = useState("");
@@ -91,24 +95,49 @@ const CardDesign = () => {
   };
 
   const handleSave = async () => {
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
+    const userId = decoded.userId ?? decoded.sub;
+
+    let uploadedProfileUrl = profileImage;
+    let uploadedBackgroundUrl = backgroundImage;
+
+    try {
+      // Seçili dosya varsa yükle
+      if (profileFile) {
+        uploadedProfileUrl = await uploadImageAndReplaceOld(
+          userId,
+          profileFile,
+          "profilePhoto"
+        );
+      }
+      if (backgroundFile) {
+        uploadedBackgroundUrl = await uploadImageAndReplaceOld(
+          userId,
+          backgroundFile,
+          "backgroundPhoto"
+        );
+      }
+    } catch (uploadErr) {
+      setMessage("Resim yüklenirken hata oluştu: " + uploadErr.message);
+      return;
+    }
+
     const cardData = {
       fullName,
       jobTitle,
       about,
       email,
       phone,
-      backgroundImageUrl: backgroundImage || null,
-      profileImageUrl: profileImage || null,
+      backgroundImageUrl: uploadedBackgroundUrl || null,
+      profileImageUrl: uploadedProfileUrl || null,
       linkedinUrl: linkedin || null,
       githubUrl: github || null,
       websiteUrl: website || null,
       skills,
       projects,
-      selectedDesignId: 1 || null,
+      selectedDesignId: 1,
     };
-
-    const token = localStorage.getItem("token");
-    console.log("Token:", token);
 
     try {
       const response = await fetch(API_URL, {
@@ -123,14 +152,8 @@ const CardDesign = () => {
       if (response.ok) {
         setMessage("Kart başarıyla kaydedildi!");
       } else {
-        let errorData = null;
-        const text = await response.text();
-        if (text) {
-          errorData = JSON.parse(text);
-        }
-        setMessage(
-          "Kaydetme hatası: " + (errorData?.message || response.statusText)
-        );
+        const errorText = await response.text();
+        setMessage("Kaydetme hatası: " + errorText);
       }
     } catch (error) {
       setMessage("İstek sırasında hata oluştu: " + error.message);
@@ -153,10 +176,7 @@ const CardDesign = () => {
       >
         <div className="image-wrapper">
           {profileImage ? (
-            <img
-              src={profileImage}
-              alt="Profil"
-            />
+            <img src={profileImage} alt="Profil" />
           ) : (
             <div className="placeholder-text">Profil Resmi Yok</div>
           )}
@@ -231,24 +251,62 @@ const CardDesign = () => {
 
       {/* Form Alanı */}
       <div className="form">
-        <label>
-          Profil Resmi URL:
+        <div>
+          <label>Profil Resmi:</label>
+          {profileFile ? (
+            <p>{profileFile.name}</p>
+          ) : profileImage ? (
+            <p>Yüklü: profilePhoto bulut sistemde mevcut</p>
+          ) : (
+            <p>Dosya seçilmedi</p>
+          )}
+          <button
+            onClick={() => document.getElementById("profileInput").click()}
+          >
+            Dosya Seç
+          </button>
           <input
-            type="text"
-            value={profileImage}
-            onChange={(e) => setProfileImage(e.target.value)}
-            placeholder="https://..."
+            id="profileInput"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setProfileFile(file);
+                setProfileImage(URL.createObjectURL(file)); // Önizleme için
+              }
+            }}
           />
-        </label>
-        <label>
-          Arka Plan Resmi URL:
+        </div>
+        <div>
+          <label>Arka Plan Resmi:</label>
+          {backgroundFile ? (
+            <p>{backgroundFile.name}</p>
+          ) : backgroundImage ? (
+            <p>Yüklü: backgroundPhoto bulut sistemde mevcut</p>
+          ) : (
+            <p>Dosya seçilmedi</p>
+          )}
+          <button
+            onClick={() => document.getElementById("backgroundInput").click()}
+          >
+            Dosya Seç
+          </button>
           <input
-            type="text"
-            value={backgroundImage}
-            onChange={(e) => setBackgroundImage(e.target.value)}
-            placeholder="https://..."
+            id="backgroundInput"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setBackgroundFile(file);
+                setBackgroundImage(URL.createObjectURL(file)); // Önizleme
+              }
+            }}
           />
-        </label>
+        </div>
 
         <label>
           Ad Soyad:
