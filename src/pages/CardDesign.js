@@ -121,11 +121,6 @@ const CardDesign = () => {
       });
 
       if (response.ok) {
-        let responseData = null;
-        const text = await response.text();
-        if (text) {
-          responseData = JSON.parse(text);
-        }
         setMessage("Kart başarıyla kaydedildi!");
       } else {
         let errorData = null;
