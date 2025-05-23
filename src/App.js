@@ -8,11 +8,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
-import CardDesign from "./pages/CardDesign";
-import { UserProvider, useUser } from "./contexts/UserContext"; // Context importu
+import Designscreen from "./pages/Designscreen";
+import { UserProvider, useUser } from "./contexts/UserContext";
 
 function AppRoutes() {
-  const { user, loading } = useUser(); // ✅ firebaseUser yerine user kullanıyoruz
+  const { user, loading } = useUser();
 
   if (loading) {
     return (
@@ -48,8 +48,8 @@ function AppRoutes() {
           element={user ? <Home /> : <Navigate to="/login" replace />}
         />
         <Route
-          path="/carddesign"
-          element={user ? <CardDesign /> : <Navigate to="/login" replace />}
+          path="/designscreen"
+          element={user ? <Designscreen /> : <Navigate to="/login" replace />}
         />
         <Route
           path="*"

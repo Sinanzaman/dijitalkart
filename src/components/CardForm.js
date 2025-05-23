@@ -1,8 +1,10 @@
 const CardForm = ({
   profileImage,
+  setProfileImage,
   setProfileFile,
   profileFile,
   backgroundImage,
+  setBackgroundImage,
   setBackgroundFile,
   backgroundFile,
   fullName,
@@ -44,9 +46,27 @@ const CardForm = ({
       <div>
         <label>Profil Resmi:</label>
         {profileFile ? (
-          <p>{profileFile.name}</p>
+          <>
+            <p>{profileFile.name}</p>
+            <button type="button" onClick={() => setProfileFile(null)}>
+              Kaldır
+            </button>
+          </>
         ) : profileImage ? (
-          <p>Bulut sistemde mevcut</p>
+          <>
+            <p>Bulut sistemde mevcut</p>
+            <button
+              type="button"
+              onClick={() => {
+                setProfileFile(null);
+                // Eğer setProfileImage varsa, onu da null yap
+                if (typeof setProfileImage === "function")
+                  setProfileImage(null);
+              }}
+            >
+              Kaldır
+            </button>
+          </>
         ) : (
           <p>Dosya seçilmedi</p>
         )}
@@ -71,9 +91,26 @@ const CardForm = ({
       <div>
         <label>Arka Plan Resmi:</label>
         {backgroundFile ? (
-          <p>{backgroundFile.name}</p>
+          <>
+            <p>{backgroundFile.name}</p>
+            <button type="button" onClick={() => setBackgroundFile(null)}>
+              Kaldır
+            </button>
+          </>
         ) : backgroundImage ? (
-          <p>Bulut sistemde mevcut</p>
+          <>
+            <p>Bulut sistemde mevcut</p>
+            <button
+              type="button"
+              onClick={() => {
+                setBackgroundFile(null);
+                if (typeof setBackgroundImage === "function")
+                  setBackgroundImage(null);
+              }}
+            >
+              Kaldır
+            </button>
+          </>
         ) : (
           <p>Dosya seçilmedi</p>
         )}

@@ -405,9 +405,9 @@
 }
 
 .image-wrapper3 {
-  width: 112px;       /* 160px → %70 */
+  width: 112px;
   height: 112px;
-  max-width: 17.5vw;  /* 25vw → %70 */
+  max-width: 17.5vw;
   max-height: 17.5vw;
   border-radius: 50%;
 }

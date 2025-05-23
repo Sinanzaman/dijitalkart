@@ -50,22 +50,24 @@ const MyDesigns = ({
           : backgroundImage
           ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${backgroundImage})`
           : "none",
+        backgroundColor:
+          backgroundImage || backgroundFile
+            ? "transparent"
+            : "rgba(0, 0, 0, 0.5)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className={`image-wrapper${designindex}`}>
-        {profileFile ? (
-          <img src={URL.createObjectURL(profileFile)} alt="Profil" />
-        ) : profileImage ? (
-          <img src={profileImage} alt="Profil" />
-        ) : (
-          <div className={`placeholder-text${designindex}`}>
-            Profil Resmi Yok
-          </div>
-        )}
-      </div>
+      {(profileFile || profileImage) && (
+        <div className={`image-wrapper${designindex}`}>
+          {profileFile ? (
+            <img src={URL.createObjectURL(profileFile)} alt="Profil" />
+          ) : (
+            <img src={profileImage} alt="Profil" />
+          )}
+        </div>
+      )}
 
       <h2>{fullName || "Ad Soyad"}</h2>
       <h4>{jobTitle || "İş Pozisyonu"}</h4>
@@ -90,7 +92,7 @@ const MyDesigns = ({
       <p>
         <b>Email:</b>{" "}
         {email ? (
-          <a href={`mailto:${email}`} style={{ fontWeight:"bold" }} >
+          <a href={`mailto:${email}`} style={{ fontWeight: "bold" }}>
             {email}
           </a>
         ) : (
@@ -100,7 +102,7 @@ const MyDesigns = ({
       <p>
         <b>Telefon:</b>{" "}
         {phone ? (
-          <a href={`tel:${phone}`} style={{ fontWeight:"bold" }}>
+          <a href={`tel:${phone}`} style={{ fontWeight: "bold" }}>
             {phone}
           </a>
         ) : (

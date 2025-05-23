@@ -142,7 +142,7 @@ const SelectDesign = () => {
           : "Seçili kart yok"}
       </div>
 
-      <div className="design-grid">
+      {!selectedDesignIndex && <div className="design-grid">
         {[1, 2, 3].map((index) => (
           <div key={index} className="design-item">
             <MyDesigns cardid={cardid} designindex={index} {...designProps} />
@@ -176,7 +176,7 @@ const SelectDesign = () => {
             )}
           </div>
         ))}
-      </div>
+      </div>}
       <PreviewModal
         cardid={cardid}
         isOpen={selectedDesignIndex !== null}

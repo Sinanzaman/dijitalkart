@@ -6,7 +6,7 @@ import MyDesigns from "../components/MyDesigns";
 import CardForm from "../components/CardForm";
 import { useUser } from "../contexts/UserContext";
 
-const CardDesign = () => {
+const Designscreen = () => {
   const { cardid } = useUser();
   const [profileImage, setProfileImage] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
@@ -192,9 +192,11 @@ const CardDesign = () => {
       {/* Form Alanı */}
       <CardForm
         profileImage={profileImage}
+        setProfileImage={setProfileImage}
         setProfileFile={setProfileFile}
         profileFile={profileFile}
         backgroundImage={backgroundImage}
+        setBackgroundImage={setBackgroundImage}
         setBackgroundFile={setBackgroundFile}
         backgroundFile={backgroundFile}
         fullName={fullName}
@@ -234,4 +236,4 @@ const CardDesign = () => {
   );
 };
 
-export default CardDesign;
+export default Designscreen;

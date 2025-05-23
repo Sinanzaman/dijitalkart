@@ -4,7 +4,7 @@ import { IoMdExit } from "react-icons/io";
 import FlipLogo from "../components/FlipLogo";
 import "../CSS/Home.css";
 import { useUser } from "../contexts/UserContext";
-import CardDesign from "../pages/CardDesign";
+import Designscreen from "./Designscreen";
 import SelectDesign from "./SelectDesign";
 import SearchUser from "./SearchUser";
 import HomeScreen from "./Homescreen";
@@ -32,7 +32,7 @@ export default function MainScreen() {
   }, [loading, user, navigate]);
 
   const pages = [
-    { label: "Kart Bilgilerim", key: "carddesign" },
+    { label: "Kart Bilgilerim", key: "designscreen" },
     { label: "Kart Tasarımlarım", key: "preview" },
     { label: "Alınan Mesajlar", key: "received_message" },
     { label: "Gönderilen Mesajlar", key: "delivered_messages" },
@@ -70,8 +70,8 @@ export default function MainScreen() {
 
   const renderContent = () => {
     switch (activePage) {
-      case "carddesign":
-        return <CardDesign />;
+      case "designscreen":
+        return <Designscreen />;
       case "home":
         return <HomeScreen />;
       case "preview":
