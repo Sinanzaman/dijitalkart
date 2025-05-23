@@ -1,6 +1,8 @@
 package com.sinanzmn.backend.model;
 
+import java.util.HashSet;
 import jakarta.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +25,10 @@ public class User {
 
     @Column(name = "cardid")
     private String cardid;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_contacts", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "contact_id"))
+    private Set<User> contacts = new HashSet<>();
 
     public User() {
     }
@@ -83,5 +89,21 @@ public class User {
 
     public void setCardid(String cardid) {
         this.cardid = cardid;
+    }
+
+    public Set<User> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<User> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void addContact(User contact) {
+        this.contacts.add(contact);
+    }
+
+    public void removeContact(User contact) {
+        this.contacts.remove(contact);
     }
 }

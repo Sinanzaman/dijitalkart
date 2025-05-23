@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import MyDesigns from "../components/MyDesigns";
 import "../CSS/SelectDesign.css";
 import PreviewModal from "../components/PreviewModal";
+import { useUser } from "../contexts/UserContext";
 
 const SelectDesign = () => {
+  const { cardid } = useUser();
   const [profileImage, setProfileImage] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
   const [fullName, setFullName] = useState("");
@@ -143,7 +145,7 @@ const SelectDesign = () => {
       <div className="design-grid">
         {[1, 2, 3].map((index) => (
           <div key={index} className="design-item">
-            <MyDesigns designindex={index} {...designProps} />
+            <MyDesigns cardid={cardid} designindex={index} {...designProps} />
 
             <div className="buttons-row">
               <button
@@ -176,6 +178,7 @@ const SelectDesign = () => {
         ))}
       </div>
       <PreviewModal
+        cardid={cardid}
         isOpen={selectedDesignIndex !== null}
         onRequestClose={closeModal}
         designindex={selectedDesignIndex}

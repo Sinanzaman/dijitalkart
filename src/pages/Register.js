@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase";
+import "../CSS/Register.css";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -70,36 +71,12 @@ export default function Register() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f3f2ef",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: 40,
-          borderRadius: 8,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          width: "100%",
-          maxWidth: 400,
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <h1 style={{ marginBottom: 24, fontSize: 28, color: "#0a66c2" }}>
-          DijitalKart'a Kayıt Ol
-        </h1>
+    <div className="register-container">
+      <div className="register-card">
+        <h1 className="register-title">DijitalKart'a Kayıt Ol</h1>
 
-        <form style={{ width: "100%" }} onSubmit={handleRegister}>
-          <label htmlFor="username" style={labelStyle}>
+        <form className="register-form" onSubmit={handleRegister}>
+          <label htmlFor="username" className="register-label">
             Kullanıcı adı
           </label>
           <input
@@ -113,15 +90,13 @@ export default function Register() {
             }}
             maxLength={30}
             required
-            style={inputStyle}
+            className="register-input"
           />
           {usernameError && (
-            <p style={{ color: "red", fontSize: 13, marginBottom: 10 }}>
-              {usernameError}
-            </p>
+            <p className="register-error">{usernameError}</p>
           )}
 
-          <label htmlFor="email" style={labelStyle}>
+          <label htmlFor="email" className="register-label">
             Email adresi
           </label>
           <input
@@ -131,10 +106,10 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={inputStyle}
+            className="register-input"
           />
 
-          <label htmlFor="password" style={labelStyle}>
+          <label htmlFor="password" className="register-label">
             Şifre
           </label>
           <input
@@ -144,52 +119,35 @@ export default function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={inputStyle}
+            className="register-input"
           />
 
           <button
             type="submit"
             disabled={loading}
-            style={{
-              ...buttonStyle,
-              opacity: loading ? 0.6 : 1,
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) e.target.style.backgroundColor = "#004182";
-            }}
-            onMouseLeave={(e) => {
-              if (!loading) e.target.style.backgroundColor = "#0a66c2";
-            }}
+            className="register-button"
           >
             {loading ? "Kayıt oluyor..." : "Kayıt Ol"}
           </button>
         </form>
 
         {registerStatus === "success" && (
-          <p style={{ color: "green", marginTop: 20 }}>✅ Kayıt başarılı!</p>
+          <p className="register-success-message">✅ Kayıt başarılı!</p>
         )}
         {registerStatus &&
           registerStatus !== "success" &&
           registerStatus !== "error" && (
-            <p style={{ color: "red", marginTop: 20 }}>{registerStatus}</p>
+            <p className="register-error-message">{registerStatus}</p>
           )}
         {registerStatus === "error" && (
-          <p style={{ color: "red", marginTop: 20 }}>
+          <p className="register-error-message">
             ❌ Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.
           </p>
         )}
 
-        <p style={{ marginTop: 30, fontSize: 14, color: "#555" }}>
+        <p className="register-bottom-text">
           Hesabınız zaten varsa,{" "}
-          <Link
-            to="/login"
-            style={{
-              color: "#0a66c2",
-              textDecoration: "none",
-              fontWeight: "600",
-            }}
-          >
+          <Link to="/login" className="register-link">
             giriş yapın
           </Link>
           .
@@ -198,35 +156,3 @@ export default function Register() {
     </div>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px 16px",
-  marginBottom: 20,
-  borderRadius: 4,
-  border: "1px solid #ccc",
-  fontSize: 16,
-  boxSizing: "border-box",
-  outlineColor: "#0a66c2",
-};
-
-const labelStyle = {
-  fontWeight: "600",
-  fontSize: 14,
-  color: "#333",
-  marginBottom: 8,
-  display: "block",
-};
-
-const buttonStyle = {
-  width: "100%",
-  backgroundColor: "#0a66c2",
-  color: "white",
-  padding: "14px 0",
-  borderRadius: 4,
-  border: "none",
-  fontWeight: "600",
-  fontSize: 16,
-  cursor: "pointer",
-  transition: "background-color 0.3s ease",
-};

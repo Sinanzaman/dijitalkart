@@ -119,6 +119,7 @@ public class CardController {
             card.getProjects().clear();
         }
         card.setSelectedDesignId(cardRequest.getSelectedDesignId());
+        card.setCardid(cardRequest.getCardid());
 
         Card savedCard = cardService.saveCard(card);
 

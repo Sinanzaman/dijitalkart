@@ -4,31 +4,58 @@
   color: var(--text-color, #333);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  max-width: 600px; /* Daha dar hale getirildi */
+  max-width: 600px;
   margin: 1rem auto;
+  border-radius: 12px; /* Köşeler yumuşatıldı */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Hafif gölge eklendi */
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .home-screen h1 {
-  font-size: 1.75rem; /* Aynı kalsın dedin ama birazcık küçültüldü ki taşmasın */
+  font-size: 1.75rem;
   margin-bottom: 1rem;
   text-align: center;
   color: var(--primary-color, #3a86ff);
+  transition: color 0.3s ease;
 }
 
 .home-screen p {
   margin-bottom: 0.75rem;
-  padding: 0.5rem 0.75rem; /* Daha kompakt hale getirildi */
-  background-color: rgba(0, 0, 0, 0.03);
+  padding: 0.5rem 0.75rem;
+  background-color: var(--p-background-color, rgba(0, 0, 0, 0.03));
   border-left: 4px solid var(--primary-color, #3a86ff);
   border-radius: 4px;
-  font-size: 0.95rem; /* Yazı boyutu sabit kalabilir */
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .home-screen strong {
   color: var(--primary-color, #3a86ff);
+  transition: color 0.3s ease;
 }
 
 .home-screen em {
   font-style: italic;
-  color: #666;
+  color: var(--em-color, #666);
+  transition: color 0.3s ease;
+}
+
+/* Tema renkleri için değişkenler */
+
+/* Aydınlık tema (default) */
+.main-container.light {
+  --background-color: #ffffff;
+  --text-color: #333;
+  --primary-color: #3a86ff;
+  --p-background-color: rgba(0, 0, 0, 0.03);
+  --em-color: #666;
+}
+
+/* Karanlık tema */
+.main-container.dark {
+  --background-color: #1e1e1e;
+  --text-color: #ddd;
+  --primary-color: #5eaaff;
+  --p-background-color: rgba(255, 255, 255, 0.1);
+  --em-color: #aaa;
 }

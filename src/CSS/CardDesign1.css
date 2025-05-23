@@ -1,3 +1,74 @@
+
+.cardid-container {
+  display: flex;
+  justify-content: center; /* Ortala */
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.cardid-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: white;
+}
+
+.copy-icon {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.copy-icon:hover {
+  color: #00bcd4;
+}
+
+.cardid-qr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.cardid-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.cardid-copy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  word-break: break-all;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #007bff;
+}
+
+.qr-wrapper {
+  flex: 1;
+  max-width: 150px;
+  min-width: 80px;
+}
+
+
 /* ---- Css 1 ---- */
 .preview1 > * {
   background-color: rgba(255, 255, 255, 0.3);
@@ -132,7 +203,7 @@
 
 .preview2 {
   width: 70%;
-  margin: auto;
+  margin: 0;
   padding: 14px; /* Önce 20px */
   border-radius: 8px; /* Önce 12px */
   background-color: var(--container-bg);

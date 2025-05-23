@@ -8,6 +8,10 @@ import CardDesign from "../pages/CardDesign";
 import SelectDesign from "./SelectDesign";
 import SearchUser from "./SearchUser";
 import HomeScreen from "./Homescreen";
+import MyContacts from "./MyContacts";
+import UserSettings from "./UserSettings";
+import ReceivedMessages from "./ReceivedMessage";
+import DeliveredMessages from "./DeliveredMessages";
 
 export default function MainScreen() {
   const navigate = useNavigate();
@@ -29,7 +33,9 @@ export default function MainScreen() {
   const pages = [
     { label: "Kart Bilgilerim", key: "carddesign" },
     { label: "Kart Tasarımlarım", key: "preview" },
-    { label: "Mesaj İsteklerim", key: "requests" },
+    { label: "Alınan Mesajlar", key: "received_message" },
+    { label: "Gönderilen Mesajlar", key: "delivered_messages" },
+    { label: "Kişilerim", key: "mycontacts" },
     { label: "Kullanıcı Ara", key: "search" },
   ];
 
@@ -68,20 +74,31 @@ export default function MainScreen() {
       case "home":
         return <HomeScreen />;
       case "preview":
-        return <SelectDesign/>;
+        return <SelectDesign />;
+      case "received_message":
+        return <ReceivedMessages />;
+      case "delivered_messages":
+        return <DeliveredMessages />;
+      case "mycontacts":
+        return <MyContacts />;
       case "requests":
         return <div>İsteklerim sayfası hazırlanıyor.</div>;
       case "search":
         return <SearchUser />;
+      case "usersettings":
+        return <UserSettings />;
       default:
         return <div>Sayfa bulunamadı.</div>;
     }
   };
 
   const getPageTitle = (key) => {
-    const page = pages.find((p) => p.key === key);
-    return page ? page.label : "Ana Sayfa";
-  };
+  const page = pages.find((p) => p.key === key);
+  if (page) return page.label;
+  if (key === "usersettings") return "Hesap Ayarları";
+  return "Ana Sayfa";
+};
+
 
   return (
     <div className={`main-container ${theme}`}>
@@ -130,6 +147,17 @@ export default function MainScreen() {
                     onClick={toggleTheme}
                   >
                     Tema: {theme === "light" ? "Aydınlık" : "Karanlık"}
+                  </button>
+                );
+              }
+              if (page === "Hesap Ayarları") {
+                return (
+                  <button
+                    key={page}
+                    className="sidebar-btn"
+                    onClick={() => handlePageChange("usersettings")}
+                  >
+                    {page}
                   </button>
                 );
               }

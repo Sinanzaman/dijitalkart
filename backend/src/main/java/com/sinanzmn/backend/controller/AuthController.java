@@ -158,4 +158,127 @@ public class AuthController {
                 "username", user.getUsername(),
                 "email", user.getEmail()));
     }
+
+    @PostMapping("/user/add-contact")
+    public ResponseEntity<?> addContact(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody Map<String, Long> body) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+        }
+
+        String token = authHeader.substring(7);
+
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+        }
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+
+        Long contactId = body.get("contactUserId");
+        if (contactId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "contactUserId zorunlu"));
+        }
+
+        if (userId.equals(contactId)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Kendini kişi olarak ekleyemezsin"));
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        Optional<User> contactOpt = userRepository.findById(contactId);
+
+        if (userOpt.isEmpty() || contactOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Kullanıcı bulunamadı"));
+        }
+
+        User user = userOpt.get();
+        User contact = contactOpt.get();
+
+        if (user.getContacts().contains(contact)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Kişi zaten ekli"));
+        }
+
+        user.addContact(contact);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Kişi başarıyla eklendi"));
+    }
+
+    @DeleteMapping("/user/remove-contact")
+    public ResponseEntity<?> removeContact(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody Map<String, Long> body) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+        }
+
+        String token = authHeader.substring(7);
+
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+        }
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+
+        Long contactId = body.get("contactUserId");
+        if (contactId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "contactUserId zorunlu"));
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        Optional<User> contactOpt = userRepository.findById(contactId);
+
+        if (userOpt.isEmpty() || contactOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Kullanıcı bulunamadı"));
+        }
+
+        User user = userOpt.get();
+        User contact = contactOpt.get();
+
+        if (!user.getContacts().contains(contact)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Kişi listede yok"));
+        }
+
+        user.removeContact(contact);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Kişi başarıyla silindi"));
+    }
+
+    @GetMapping("/user/contacts")
+    public ResponseEntity<?> getUserContacts(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+        }
+
+        String token = authHeader.substring(7);
+
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+        }
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        var contacts = user.getContacts();
+
+        // Basit örnek dönüş
+        var contactList = contacts.stream().map(contact -> Map.of(
+                "id", contact.getId(),
+                "username", contact.getUsername(),
+                "email", contact.getEmail(),
+                "cardid", contact.getCardid())).toList();
+
+        return ResponseEntity.ok(contactList);
+    }
+
 }

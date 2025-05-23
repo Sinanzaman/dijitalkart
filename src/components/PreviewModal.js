@@ -2,7 +2,7 @@ import Tilt from "react-parallax-tilt";
 import Modal from "react-modal";
 import MyDesigns from "./MyDesigns";
 
-const PreviewModal = ({ isOpen, onRequestClose, designindex, designProps }) => {
+const PreviewModal = ({ isOpen, onRequestClose, designindex, designProps, cardid }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -12,7 +12,7 @@ const PreviewModal = ({ isOpen, onRequestClose, designindex, designProps }) => {
       overlayClassName="preview-overlay"
     >
       <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1}>
-        <MyDesigns designindex={designindex} {...designProps} />
+        <MyDesigns cardid={cardid} designindex={designindex} {...designProps} />
       </Tilt>
     </Modal>
   );

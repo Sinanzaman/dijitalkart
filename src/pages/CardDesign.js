@@ -130,6 +130,7 @@ const CardDesign = () => {
     }
 
     const cardData = {
+      cardid,
       fullName,
       jobTitle,
       about,
@@ -214,10 +215,12 @@ const CardDesign = () => {
         setWebsite={setWebsite}
         skills={skills}
         newSkill={newSkill}
+        setSkills={setSkills}
         setNewSkill={setNewSkill}
         addSkill={addSkill}
         removeSkill={removeSkill}
         projects={projects}
+        setProjects={setProjects}
         newProject={newProject}
         setNewProject={setNewProject}
         addProject={addProject}

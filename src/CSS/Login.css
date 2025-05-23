@@ -1,15 +1,31 @@
-/* src/pages/Login.css */
-
 .login-container {
   min-height: 100vh;
-  background-color: #f3f2ef;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  height: 100%;
+  position: relative;
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
 }
 
 .login-card {
+  position: relative;
+  z-index: 2;
   background-color: white;
   padding: 40px;
   border-radius: 8px;
@@ -114,4 +130,86 @@
   color: #0a66c2;
   text-decoration: none;
   font-weight: 600;
+}
+
+/* "DijitalKart Nedir?" butonu sayfa altına sabitlensin */
+.info-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.info-button:hover {
+  background-color: #004182;
+}
+
+/* Panel sayfa altından yukarı kayan tarzda */
+.info-panel {
+  position: fixed;
+  bottom: 70px;  /* Butonun üstünde */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  background: white;
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  z-index: 1001;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  animation: slideUp 0.3s ease forwards;
+  text-align: center;
+}
+
+.info-panel h2 {
+  margin-bottom: 16px;
+  color: #0a66c2;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.info-panel p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+/* Kapat butonu */
+.close-info-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.close-info-button:hover {
+  background-color: #a71d2a;
+}
+
+/* Basit yukarı kayma animasyonu */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }

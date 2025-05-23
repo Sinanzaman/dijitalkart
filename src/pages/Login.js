@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
@@ -13,40 +12,41 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginStatus, setLoginStatus] = useState(null);
+  const [showInfoPanel, setShowInfoPanel] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  setLoginStatus(null);
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    const updateResponse = await fetch("http://localhost:8080/api/auth/update-password", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!updateResponse.ok) {
-      console.warn("Backend şifre güncellemesi başarısız olabilir.");
-    }
-    const response = await fetch("http://localhost:8080/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      localStorage.setItem("token", data.token);
-      setUser(data.user);
-      setTheme(data.user.theme);
-      navigate("/home");
-      setLoginStatus("success");
-    } else {
+    e.preventDefault();
+    setLoginStatus(null);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      const updateResponse = await fetch("http://localhost:8080/api/auth/update-password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!updateResponse.ok) {
+        console.warn("Backend şifre güncellemesi başarısız olabilir.");
+      }
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        setUser(data.user);
+        setTheme(data.user.theme);
+        navigate("/home");
+        setLoginStatus("success");
+      } else {
+        setLoginStatus("error");
+      }
+    } catch (firebaseError) {
       setLoginStatus("error");
     }
-  } catch (firebaseError) {
-    setLoginStatus("error");
-  }
-};
+  };
 
   return (
     <div className="login-container">
@@ -113,6 +113,33 @@ export default function Login() {
           </Link>
         </p>
       </div>
+
+      {/* Sayfanın en altında, sabit buton */}
+      <button
+        type="button"
+        className="info-button"
+        onClick={() => setShowInfoPanel(!showInfoPanel)}
+      >
+        DijitalKart Nedir?
+      </button>
+
+      {/* Açılır bilgi paneli */}
+      {showInfoPanel && (
+        <div className="info-panel">
+          <h2>DijitalKart Nedir?</h2>
+          <p>
+            DijitalKart, dijital kartvizitlerinizi kolayca oluşturabileceğiniz, paylaşabileceğiniz ve yönetebileceğiniz yenilikçi bir uygulamadır.
+            Kartvizit bilgilerinizi güncellemek, farklı temalar kullanmak ve profesyonel görünümler oluşturmak artık çok kolay.
+          </p>
+          <button
+            type="button"
+            className="close-info-button"
+            onClick={() => setShowInfoPanel(false)}
+          >
+            Kapat
+          </button>
+        </div>
+      )}
     </div>
   );
 }

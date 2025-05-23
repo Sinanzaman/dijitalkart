@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import PreviewModal from "../components/PreviewModal";
+import { useUser } from "../contexts/UserContext";
 
 export default function SearchUser() {
   const [cardid, setCardid] = useState("");
@@ -9,6 +10,11 @@ export default function SearchUser() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(1);
   const spanRef = useRef();
+
+  const { user } = useUser();
+  const currentUserId = user?.id;
+
+  const authToken = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchCardData = async () => {
@@ -76,6 +82,35 @@ export default function SearchUser() {
     }
   };
 
+  const handleAddContact = async () => {
+    if (!currentUserId || !result?.id) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/user/add-contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ contactUserId: result.id }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Kişi başarıyla eklendi.");
+      } else {
+        alert(data.message || "Kişi eklenemedi.");
+      }
+    } catch (err) {
+      console.error("Hata:", err);
+      alert("Kişi eklenirken bir hata oluştu.");
+    }
+  };
+
   const inputWidth = spanRef.current
     ? `${spanRef.current.offsetWidth + 10}px`
     : "150px";
@@ -132,6 +167,7 @@ export default function SearchUser() {
           <p>
             <strong>Email:</strong> {result.email}
           </p>
+
           <button
             onClick={() => {
               setPreviewIndex(cardData?.selectedDesignId || 1);
@@ -140,8 +176,26 @@ export default function SearchUser() {
           >
             Kartı Önizle
           </button>
+
+          {currentUserId && result.id !== currentUserId && (
+            <button
+              onClick={handleAddContact}
+              style={{
+                marginLeft: "10px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                padding: "8px 12px",
+                border: "none",
+                borderRadius: "4px",
+              }}
+            >
+              Kişiyi Ekle
+            </button>
+          )}
+
           {cardData && (
             <PreviewModal
+              cardid={cardid}
               isOpen={previewOpen}
               onRequestClose={() => setPreviewOpen(false)}
               designindex={previewIndex}

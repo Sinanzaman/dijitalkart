@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { FaRegCopy } from "react-icons/fa";
+import { QRCodeSVG } from "qrcode.react";
 import "../CSS/CardDesign1.css";
 
 const MyDesigns = ({
@@ -20,11 +22,9 @@ const MyDesigns = ({
   projects,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const maxLength = 150; // Gösterilecek karakter sayısı
+  const maxLength = 150;
 
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
+  const toggleExpanded = () => setExpanded(!expanded);
 
   const isLong = about && about.length > maxLength;
   const displayedText = !isLong
@@ -32,6 +32,12 @@ const MyDesigns = ({
     : expanded
     ? about
     : about.substring(0, maxLength) + "...";
+
+  const copyCardId = () => {
+    if (!cardid) return;
+    navigator.clipboard.writeText(cardid);
+    alert("Card ID kopyalandı: " + cardid);
+  };
 
   return (
     <div
@@ -55,9 +61,12 @@ const MyDesigns = ({
         ) : profileImage ? (
           <img src={profileImage} alt="Profil" />
         ) : (
-          <div className={`placeholder-text${designindex}`}>Profil Resmi Yok</div>
+          <div className={`placeholder-text${designindex}`}>
+            Profil Resmi Yok
+          </div>
         )}
       </div>
+
       <h2>{fullName || "Ad Soyad"}</h2>
       <h4>{jobTitle || "İş Pozisyonu"}</h4>
       <p>
@@ -79,12 +88,25 @@ const MyDesigns = ({
       </p>
 
       <p>
-        <b>Email:</b> {email || "-"}
+        <b>Email:</b>{" "}
+        {email ? (
+          <a href={`mailto:${email}`} style={{ fontWeight:"bold" }} >
+            {email}
+          </a>
+        ) : (
+          "-"
+        )}
       </p>
       <p>
-        <b>Telefon:</b> {phone || "-"}
+        <b>Telefon:</b>{" "}
+        {phone ? (
+          <a href={`tel:${phone}`} style={{ fontWeight:"bold" }}>
+            {phone}
+          </a>
+        ) : (
+          "-"
+        )}
       </p>
-
       <p>
         {linkedin && (
           <a href={linkedin} target="_blank" rel="noreferrer">
@@ -93,12 +115,14 @@ const MyDesigns = ({
         )}
         {github && (
           <a href={github} target="_blank" rel="noreferrer">
-            Github
+            {" "}
+            Github{" "}
           </a>
         )}
         {website && (
           <a href={website} target="_blank" rel="noreferrer">
-            Websitesi
+            {" "}
+            Websitesi{" "}
           </a>
         )}
       </p>
@@ -139,6 +163,24 @@ const MyDesigns = ({
         ) : (
           <p>Henüz proje eklenmedi</p>
         )}
+      </div>
+
+      {/* CARD FOOTER */}
+      <div className="cardid-section">
+        <div className="cardid-copy">
+          <span>
+            <strong>CardID:</strong> {cardid}
+          </span>
+          <button className="copy-btn" onClick={copyCardId}>
+            <FaRegCopy />
+          </button>
+        </div>
+        <div className="qr-wrapper">
+          <QRCodeSVG
+            value={cardid || "yok"}
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
       </div>
     </div>
   );
