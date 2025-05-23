@@ -7,13 +7,14 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState("light");
   const [cardid, setCardid] = useState(null);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   const logout = async () => {
     localStorage.removeItem("token");
     setUser(null);
   };
 
-  // Uygulama açıldığında localStorage'den token kontrolü yapabiliriz:
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -21,10 +22,9 @@ export const UserProvider = ({ children }) => {
       return;
     }
 
-    // Token varsa backend'den user bilgilerini çekelim
     fetch("http://localhost:8080/api/auth/user", {
       headers: {
-        Authorization: `Bearer ${token}`, // Backend'in beklediği Authorization header
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -37,7 +37,7 @@ export const UserProvider = ({ children }) => {
         setCardid(data.cardid || null);
       })
       .catch(() => {
-        localStorage.removeItem("token"); // Geçersiz token varsa temizle
+        localStorage.removeItem("token");
         setUser(null);
       })
       .finally(() => {
@@ -45,7 +45,42 @@ export const UserProvider = ({ children }) => {
       });
   }, []);
 
-  // Tema değiştirme fonksiyonu - backend ile eşitleyebilirsin
+  useEffect(() => {
+    if (user?.cardid) {
+      checkUnreadMessages();
+    }
+  }, [user]);
+
+  const checkUnreadMessages = async () => {
+    const token = localStorage.getItem("token");
+    if (!token || !user?.cardid) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/messages/received/${user.cardid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Mesajlar alınamadı");
+
+      const data = await res.json();
+      const unreadMessages = data.filter(
+        (msg) => msg.read === false || msg.isRead === false
+      );
+
+      setHasUnreadMessages(unreadMessages.length > 0);
+      setUnreadMessageCount(unreadMessages.length);
+    } catch (error) {
+      console.error("Okunmamış mesaj kontrolü başarısız:", error);
+      setHasUnreadMessages(false);
+      setUnreadMessageCount(0);
+    }
+  };
+
   const toggleTheme = async () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -69,7 +104,20 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, theme, setTheme, toggleTheme, logout, cardid }}
+      value={{
+        user,
+        setUser,
+        loading,
+        theme,
+        setTheme,
+        toggleTheme,
+        logout,
+        cardid,
+        hasUnreadMessages,
+        setHasUnreadMessages,
+        unreadMessageCount,
+        setUnreadMessageCount
+      }}
     >
       {children}
     </UserContext.Provider>

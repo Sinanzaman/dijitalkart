@@ -42,4 +42,13 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
+    public void markAsRead(Long id) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mesaj bulunamadı"));
+
+        message.setisRead(true);
+
+        messageRepository.save(message);
+    }
+
 }

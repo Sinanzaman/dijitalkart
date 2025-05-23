@@ -15,7 +15,8 @@ import DeliveredMessages from "./DeliveredMessages";
 
 export default function MainScreen() {
   const navigate = useNavigate();
-  const { user, loading, theme, toggleTheme, logout } = useUser();
+  const { user, loading, theme, toggleTheme, logout, unreadMessageCount } =
+    useUser();
   const [menuOpen, setMenuOpen] = useState(true);
   const [activePage, setActivePage] = useState("home");
 
@@ -93,12 +94,11 @@ export default function MainScreen() {
   };
 
   const getPageTitle = (key) => {
-  const page = pages.find((p) => p.key === key);
-  if (page) return page.label;
-  if (key === "usersettings") return "Hesap Ayarları";
-  return "Ana Sayfa";
-};
-
+    const page = pages.find((p) => p.key === key);
+    if (page) return page.label;
+    if (key === "usersettings") return "Hesap Ayarları";
+    return "Ana Sayfa";
+  };
 
   return (
     <div className={`main-container ${theme}`}>
@@ -127,15 +127,22 @@ export default function MainScreen() {
         <div className="sidebar">
           <div className="sidebar-separator"></div>
 
-          {pages.map(({ label, key }) => (
-            <button
-              key={key}
-              className={`sidebar-btn ${activePage === key ? "active" : ""}`}
-              onClick={() => handlePageChange(key)}
-            >
-              {label}
-            </button>
-          ))}
+          {pages.map(({ label, key }) => {
+            const isReceivedMessages = key === "received_message";
+
+            return (
+              <button
+                key={key}
+                className={`sidebar-btn ${activePage === key ? "active" : ""}`}
+                onClick={() => handlePageChange(key)}
+              >
+                {label}
+                {isReceivedMessages && unreadMessageCount > 0 && (
+                  <span className="unread-badge">({unreadMessageCount})</span>
+                )}
+              </button>
+            );
+          })}
 
           <div className="sidebar-bottom">
             {bottomPages.map((page) => {

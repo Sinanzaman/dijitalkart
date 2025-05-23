@@ -52,6 +52,16 @@ public class MessageController {
         }
     }
 
+    @PatchMapping("/{id}/read")
+    public ResponseEntity<?> markMessageAsRead(@PathVariable Long id) {
+        try {
+            messageService.markAsRead(id);
+            return ResponseEntity.ok().body("Mesaj okundu olarak işaretlendi");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Mesaj okundu olarak işaretlenirken hata oluştu");
+        }
+    }
+
     // MesajRequest DTO
     public static class MessageRequest {
         private String senderCardId;

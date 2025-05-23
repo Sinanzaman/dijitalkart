@@ -11,8 +11,8 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String senderCardId;      // Gönderenin CardId'si
-    private String recipientCardId;   // Alıcının CardId'si
+    private String senderCardId; // Gönderenin CardId'si
+    private String recipientCardId; // Alıcının CardId'si
 
     private String title;
     private String body;
@@ -20,6 +20,8 @@ public class Message {
     private boolean sentByMe; // true ise "Gönderilen mesajlar" / false ise "Alınan mesajlar"
 
     private LocalDateTime timestamp;
+
+    private boolean isRead = false;
 
     public Message() {
     }
@@ -31,6 +33,7 @@ public class Message {
         this.body = body;
         this.sentByMe = sentByMe;
         this.timestamp = LocalDateTime.now();
+        this.isRead = false;
     }
 
     // Getter ve Setter'lar
@@ -89,5 +92,13 @@ public class Message {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setisRead(boolean isRead) {
+        this.isRead = isRead;
     }
 }
