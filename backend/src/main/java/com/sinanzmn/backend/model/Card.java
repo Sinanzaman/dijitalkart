@@ -42,6 +42,9 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects = new ArrayList<>();
 
+    @Column(unique = true)
+    private String cardid;
+
     public Card() {
     }
 
@@ -165,5 +168,13 @@ public class Card {
 
     public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    public String getCardid() {
+        return cardid;
+    }
+
+    public void setCardid(String cardid) {
+        this.cardid = cardid;
     }
 }

@@ -59,6 +59,17 @@ public class CardController {
         return ResponseEntity.ok(cardOpt.get());
     }
 
+    @GetMapping("/{cardid}")
+    public ResponseEntity<?> getCardByCardid(@PathVariable String cardid) {
+        Optional<Card> cardOpt = cardService.getCardByCardid(cardid);
+
+        if (cardOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Card not found"));
+        }
+
+        return ResponseEntity.ok(cardOpt.get());
+    }
+
     // Kart oluştur veya güncelle
     @PostMapping("")
     public ResponseEntity<?> createOrUpdateCard(
@@ -113,4 +124,69 @@ public class CardController {
 
         return ResponseEntity.ok(savedCard);
     }
+
+    @PatchMapping("")
+    public ResponseEntity<?> updateSelectedDesignId(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody Map<String, Integer> updateFields) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+        }
+
+        String token = authHeader.substring(7);
+
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+        }
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        Optional<Card> cardOpt = cardService.getCardByUser(user);
+
+        if (cardOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Card not found"));
+        }
+
+        Card card = cardOpt.get();
+
+        // updateFields içinden selectedDesignId varsa güncelle
+        if (updateFields.containsKey("selectedDesignId")) {
+            card.setSelectedDesignId(updateFields.get("selectedDesignId"));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("message", "selectedDesignId not provided"));
+        }
+
+        Card savedCard = cardService.saveCard(card);
+
+        return ResponseEntity.ok(savedCard);
+    }
+
+    // GET /api/cards/user/{userId}
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getCardByUserId(@PathVariable Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "User not found"));
+        }
+
+        User user = userOpt.get();
+
+        Optional<Card> cardOpt = cardService.getCardByUser(user);
+
+        if (cardOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Card not found for user"));
+        }
+
+        return ResponseEntity.ok(cardOpt.get());
+    }
+
 }

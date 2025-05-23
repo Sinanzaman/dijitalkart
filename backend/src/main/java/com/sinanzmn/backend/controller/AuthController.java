@@ -38,8 +38,8 @@ public class AuthController {
                                 "id", user.getId(),
                                 "username", user.getUsername(),
                                 "email", user.getEmail(),
-                                "theme", user.getTheme()
-                                )));
+                                "theme", user.getTheme(),
+                                "cardid", user.getCardid())));
             }
         }
 
@@ -81,43 +81,81 @@ public class AuthController {
                 "id", user.getId(),
                 "username", user.getUsername(),
                 "email", user.getEmail(),
-                "theme", user.getTheme()
-        ));
+                "theme", user.getTheme(),
+                "cardid", user.getCardid()));
     }
 
     @PutMapping("/user/theme")
-public ResponseEntity<?> updateTheme(
-    @RequestHeader(value = "Authorization", required = false) String authHeader,
-    @RequestBody Map<String, String> body) {
-    
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+    public ResponseEntity<?> updateTheme(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody Map<String, String> body) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+        }
+
+        String token = authHeader.substring(7);
+
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+        }
+
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "User not found"));
+        }
+
+        User user = userOpt.get();
+        String newTheme = body.get("theme");
+
+        if (newTheme == null || (!newTheme.equals("light") && !newTheme.equals("dark"))) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Invalid theme value"));
+        }
+
+        user.setTheme(newTheme);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Theme updated", "theme", newTheme));
     }
 
-    String token = authHeader.substring(7);
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String newPassword = body.get("password");
 
-    if (!jwtUtil.isTokenValid(token)) {
-        return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+        if (email == null || newPassword == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Email ve şifre zorunludur"));
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Kullanıcı bulunamadı"));
+        }
+
+        User user = userOpt.get();
+
+        user.setPassword(newPassword);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Şifre başarıyla güncellendi"));
     }
 
-    Long userId = jwtUtil.getUserIdFromToken(token);
-    Optional<User> userOpt = userRepository.findById(userId);
+    @GetMapping("/find-by-cardid/{cardid}")
+    public ResponseEntity<?> findByCardId(@PathVariable String cardid) {
+        Optional<User> userOpt = userRepository.findByCardid(cardid);
 
-    if (userOpt.isEmpty()) {
-        return ResponseEntity.status(404).body(Map.of("message", "User not found"));
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "Kullanıcı bulunamadı"));
+        }
+
+        User user = userOpt.get();
+
+        return ResponseEntity.ok(Map.of(
+                "id", user.getId(),
+                "username", user.getUsername(),
+                "email", user.getEmail()));
     }
-
-    User user = userOpt.get();
-    String newTheme = body.get("theme");
-
-    if (newTheme == null || (!newTheme.equals("light") && !newTheme.equals("dark"))) {
-        return ResponseEntity.badRequest().body(Map.of("message", "Invalid theme value"));
-    }
-
-    user.setTheme(newTheme);
-    userRepository.save(user);
-
-    return ResponseEntity.ok(Map.of("message", "Theme updated", "theme", newTheme));
-}
-
 }

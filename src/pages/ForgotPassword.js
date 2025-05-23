@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../CSS/ForgotPassword.css"; // ✅ CSS dosyasını dahil etmeyi unutma
+import "../CSS/ForgotPassword.css";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -13,26 +15,13 @@ export default function ForgotPassword() {
     setMessage(null);
     setError(null);
     setLoading(true);
-
     try {
-      const response = await fetch("http://localhost:8080/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        setMessage("Şifre sıfırlama maili gönderildi. Lütfen emailinizi kontrol edin.");
-      } else if (response.status === 404) {
-        setError("Bu email adresine kayıtlı kullanıcı bulunamadı.");
-      } else {
-        setError("Bir hata oluştu. Lütfen tekrar deneyin.");
-      }
-    } catch (err) {
-      setError("Sunucuya ulaşılamıyor. Lütfen internet bağlantınızı kontrol edin.");
-      console.error(err);
-    } finally {
+      await sendPasswordResetEmail(auth, email);
+      setMessage('Şifre sıfırlama maili gönderildi. Lütfen emailinizi kontrol edin.');
       setLoading(false);
+    } catch (err) {
+      setError('Bir hata oluştu veya email kayıtlı değil.');
+      console.error(err);
     }
   };
 

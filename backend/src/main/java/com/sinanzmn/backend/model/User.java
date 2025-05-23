@@ -21,13 +21,18 @@ public class User {
     @Column(nullable = false)
     private String theme = "light";
 
-    public User() {}
+    @Column(name = "cardid")
+    private String cardid;
 
-    public User(String email, String password, String username) {
+    public User() {
+    }
+
+    public User(String email, String password, String username, String cardid) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.theme = "light";
+        this.cardid = cardid;
     }
 
     // Getter - Setter
@@ -70,5 +75,13 @@ public class User {
 
     public void setTheme(String theme) {
         this.theme = theme;
+    }
+
+    public String getCardid() {
+        return cardid;
+    }
+
+    public void setCardid(String cardid) {
+        this.cardid = cardid;
     }
 }

@@ -22,4 +22,9 @@ public class CardService {
     public Card saveCard(Card card) {
         return cardRepository.save(card);
     }
+
+    public Optional<Card> getCardByCardid(String cardid) {
+        return cardRepository.findByCardid(cardid);
+    }
+
 }

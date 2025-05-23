@@ -1,0 +1,125 @@
+.design-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.preview-modal {
+  padding: 0;
+  width: auto;
+  max-width: 500px;
+  margin: auto;
+  border-radius: 12px;
+  outline: none;
+}
+
+.preview-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.preview-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.preview-button:hover {
+  background-color: #0056b3;
+}
+
+.selectdesign-container {
+  padding: 1rem;
+}
+
+.current-selected-design {
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+}
+
+.design-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.design-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.buttons-row {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.use-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.use-button:hover {
+  background-color: #218838;
+}
+
+.preview-button {
+  cursor: pointer;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  border: 1px solid #007bff;
+  background-color: white;
+  color: #007bff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.preview-button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.message-text {
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.message-text.error {
+  color: red;
+}
+
+.message-text.success {
+  color: green;
+}

@@ -1,5 +1,7 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../firebase";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -28,28 +30,41 @@ export default function Register() {
     if (!validateUsername(username)) return;
 
     setLoading(true);
+
     try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({
+          email,
+          username,
+          password,
+          cardid: userCredential.user.uid,
+        }),
       });
-
       if (response.ok) {
         setRegisterStatus("success");
         setEmail("");
         setUsername("");
         setPassword("");
       } else {
-        // Backend'den gelen hata mesajını alabiliriz
         const data = await response.json();
         setRegisterStatus(data.message || "error");
       }
     } catch (error) {
-      console.error(error);
-      setRegisterStatus("error");
+      console.error("Kayıt hatası:", error);
+      if (error.code && error.code.startsWith("auth/")) {
+        setRegisterStatus(error.message); // Firebase hataları
+      } else {
+        setRegisterStatus("error");
+      }
     }
     setLoading(false);
   };
@@ -154,9 +169,11 @@ export default function Register() {
         {registerStatus === "success" && (
           <p style={{ color: "green", marginTop: 20 }}>✅ Kayıt başarılı!</p>
         )}
-        {registerStatus && registerStatus !== "success" && registerStatus !== "error" && (
-          <p style={{ color: "red", marginTop: 20 }}>{registerStatus}</p>
-        )}
+        {registerStatus &&
+          registerStatus !== "success" &&
+          registerStatus !== "error" && (
+            <p style={{ color: "red", marginTop: 20 }}>{registerStatus}</p>
+          )}
         {registerStatus === "error" && (
           <p style={{ color: "red", marginTop: 20 }}>
             ❌ Kayıt başarısız. Lütfen bilgilerinizi kontrol edin.

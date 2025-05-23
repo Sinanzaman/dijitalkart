@@ -27,13 +27,14 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration corsConfig = new CorsConfiguration();
                 corsConfig.setAllowedOrigins(List.of("http://localhost:3000")); // React uygulamanın adresi
-                corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
                 corsConfig.setAllowedHeaders(List.of("*"));
                 corsConfig.setAllowCredentials(true);
                 return corsConfig;
             }))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/cards/user/**").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -2,8 +2,12 @@ import { jwtDecode } from "jwt-decode";
 import React, { useState, useEffect } from "react";
 import "../CSS/CardDesign.css";
 import { uploadImageAndReplaceOld } from "../firebase";
+import MyDesigns from "../components/MyDesigns";
+import CardForm from "../components/CardForm";
+import { useUser } from "../contexts/UserContext";
 
 const CardDesign = () => {
+  const { cardid } = useUser();
   const [profileImage, setProfileImage] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
   const [profileFile, setProfileFile] = useState(null);
@@ -17,6 +21,7 @@ const CardDesign = () => {
   const [github, setGithub] = useState("");
   const [website, setWebsite] = useState("");
   const [skills, setSkills] = useState([]);
+  const [selectedDesignId, setSelectedDesignId] = useState(null);
   const [newSkill, setNewSkill] = useState("");
   const [projects, setProjects] = useState([]);
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -55,6 +60,7 @@ const CardDesign = () => {
           setGithub(data.githubUrl || "");
           setWebsite(data.websiteUrl || "");
           setSkills(data.skills || []);
+          setSelectedDesignId(data.selectedDesignId || null);
           setProjects(data.projects || []); // backend tarafında projects varsa
         } else {
           console.error("Kullanıcı kartı getirilemedi.");
@@ -136,7 +142,7 @@ const CardDesign = () => {
       websiteUrl: website || null,
       skills,
       projects,
-      selectedDesignId: 1,
+      selectedDesignId: selectedDesignId || 1,
     };
 
     try {
@@ -163,383 +169,64 @@ const CardDesign = () => {
   return (
     <div className="card-page">
       {/* Önizleme Alanı */}
-      <div
-        className="preview"
-        style={{
-          backgroundImage: backgroundImage
-            ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${backgroundImage})`
-            : "none",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <div className="image-wrapper">
-          {profileImage ? (
-            <img src={profileImage} alt="Profil" />
-          ) : (
-            <div className="placeholder-text">Profil Resmi Yok</div>
-          )}
-        </div>
-
-        <h2>{fullName || "Ad Soyad"}</h2>
-        <h4>{jobTitle || "İş Pozisyonu"}</h4>
-        <p>{about || "Hakkında kısmı burada görünecek."}</p>
-        <p>
-          <b>Email:</b> {email || "-"}
-        </p>
-        <p>
-          <b>Telefon:</b> {phone || "-"}
-        </p>
-
-        <p>
-          {linkedin && (
-            <a href={linkedin} target="_blank" rel="noreferrer">
-              LinkedIn
-            </a>
-          )}
-          {github && (
-            <a href={github} target="_blank" rel="noreferrer">
-              Github
-            </a>
-          )}
-          {website && (
-            <a href={website} target="_blank" rel="noreferrer">
-              Websitesi
-            </a>
-          )}
-        </p>
-
-        <div>
-          <b>Yetenekler:</b>
-          <ul>
-            {skills.length > 0 ? (
-              skills.map((skill) => <li key={skill}>{skill}</li>)
-            ) : (
-              <li>Henüz eklenmedi</li>
-            )}
-          </ul>
-        </div>
-
-        <div>
-          <b>Projeler:</b>
-          {projects.length > 0 ? (
-            projects.map((project, index) => (
-              <div key={index} className="project-item">
-                <h4>{project.title}</h4>
-                <p>{project.description}</p>
-                {project.imageUrl && (
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title}
-                    style={{ maxWidth: "150px", maxHeight: "100px" }}
-                    onError={(e) => (e.target.style.display = "none")}
-                  />
-                )}
-                <p>
-                  <a href={project.projectUrl} target="_blank" rel="noreferrer">
-                    Projeyi Gör
-                  </a>
-                </p>
-              </div>
-            ))
-          ) : (
-            <p>Henüz proje eklenmedi</p>
-          )}
-        </div>
-      </div>
+      <MyDesigns
+        cardid={cardid}
+        profileImage={profileImage}
+        backgroundImage={backgroundImage}
+        profileFile={profileFile}
+        backgroundFile={backgroundFile}
+        fullName={fullName}
+        jobTitle={jobTitle}
+        about={about}
+        email={email}
+        phone={phone}
+        linkedin={linkedin}
+        github={github}
+        website={website}
+        skills={skills}
+        projects={projects}
+        designindex={selectedDesignId}
+      />
 
       {/* Form Alanı */}
-      <div className="form">
-        <div>
-          <label>Profil Resmi:</label>
-          {profileFile ? (
-            <p>{profileFile.name}</p>
-          ) : profileImage ? (
-            <p>Yüklü: profilePhoto bulut sistemde mevcut</p>
-          ) : (
-            <p>Dosya seçilmedi</p>
-          )}
-          <button
-            onClick={() => document.getElementById("profileInput").click()}
-          >
-            Dosya Seç
-          </button>
-          <input
-            id="profileInput"
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                setProfileFile(file);
-                setProfileImage(URL.createObjectURL(file)); // Önizleme için
-              }
-            }}
-          />
-        </div>
-        <div>
-          <label>Arka Plan Resmi:</label>
-          {backgroundFile ? (
-            <p>{backgroundFile.name}</p>
-          ) : backgroundImage ? (
-            <p>Yüklü: backgroundPhoto bulut sistemde mevcut</p>
-          ) : (
-            <p>Dosya seçilmedi</p>
-          )}
-          <button
-            onClick={() => document.getElementById("backgroundInput").click()}
-          >
-            Dosya Seç
-          </button>
-          <input
-            id="backgroundInput"
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                setBackgroundFile(file);
-                setBackgroundImage(URL.createObjectURL(file)); // Önizleme
-              }
-            }}
-          />
-        </div>
-
-        <label>
-          Ad Soyad:
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-          />
-        </label>
-        <label>
-          İş Pozisyonu:
-          <input
-            type="text"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-        </label>
-        <label>
-          Hakkında:
-          <textarea
-            value={about}
-            onChange={(e) => setAbout(e.target.value)}
-            rows={4}
-          />
-        </label>
-        <label>
-          Telefon:
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+90 555 555 5555"
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-          />
-        </label>
-        <label>
-          LinkedIn:
-          <input
-            type="url"
-            value={linkedin}
-            onChange={(e) => setLinkedin(e.target.value)}
-            placeholder="https://linkedin.com/in/username"
-          />
-        </label>
-        <label>
-          Github:
-          <input
-            type="url"
-            value={github}
-            onChange={(e) => setGithub(e.target.value)}
-            placeholder="https://github.com/username"
-          />
-        </label>
-        <label>
-          Websitesi:
-          <input
-            type="url"
-            value={website}
-            onChange={(e) => setWebsite(e.target.value)}
-            placeholder="https://example.com"
-          />
-        </label>
-
-        {/* Yetenekler */}
-        <label>
-          Yetenekler:
-          <div className="skills-input">
-            <input
-              type="text"
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-              placeholder="Yeni yetenek"
-            />
-            <button type="button" onClick={addSkill}>
-              Ekle
-            </button>
-          </div>
-        </label>
-        <div>
-          {skills.map((skill) => (
-            <span
-              key={skill}
-              className="skills-badge"
-              onClick={() => removeSkill(skill)}
-              title="Kaldırmak için tıkla"
-            >
-              {skill} &times;
-            </span>
-          ))}
-        </div>
-
-        {/* Proje Ekleme */}
-        <div style={{ marginTop: "20px" }}>
-          {!showProjectForm && (
-            <button type="button" onClick={() => setShowProjectForm(true)}>
-              Proje Ekle
-            </button>
-          )}
-
-          {showProjectForm && (
-            <div className="project-form" style={{ marginTop: "10px" }}>
-              <label>
-                Proje Başlığı:
-                <input
-                  type="text"
-                  value={newProject.title}
-                  onChange={(e) =>
-                    setNewProject({ ...newProject, title: e.target.value })
-                  }
-                  placeholder="Proje başlığı"
-                />
-              </label>
-              <label>
-                Proje Açıklaması:
-                <textarea
-                  value={newProject.description}
-                  onChange={(e) =>
-                    setNewProject({
-                      ...newProject,
-                      description: e.target.value,
-                    })
-                  }
-                  rows={2}
-                  placeholder="Proje açıklaması"
-                />
-              </label>
-              <label>
-                Proje Resmi URL:
-                <input
-                  type="text"
-                  value={newProject.imageUrl}
-                  onChange={(e) =>
-                    setNewProject({ ...newProject, imageUrl: e.target.value })
-                  }
-                  placeholder="https://..."
-                />
-              </label>
-              <label>
-                Proje Linki:
-                <input
-                  type="url"
-                  value={newProject.projectUrl}
-                  onChange={(e) =>
-                    setNewProject({ ...newProject, projectUrl: e.target.value })
-                  }
-                  placeholder="https://..."
-                />
-              </label>
-
-              <button type="button" onClick={addProject}>
-                Kaydet
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowProjectForm(false)}
-                style={{ marginLeft: "10px" }}
-              >
-                İptal
-              </button>
-            </div>
-          )}
-
-          {/* Proje Listesi */}
-          <div>
-            {projects.length > 0 ? (
-              projects.map((project, index) => (
-                <div
-                  key={index}
-                  className="project-item"
-                  style={{
-                    border: "1px solid #ccc",
-                    padding: "10px",
-                    marginTop: "10px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <h4>{project.title}</h4>
-                  <p>{project.description}</p>
-                  {project.imageUrl && (
-                    <img
-                      src={project.imageUrl}
-                      alt={project.title}
-                      style={{ maxWidth: "150px", maxHeight: "100px" }}
-                      onError={(e) => (e.target.style.display = "none")}
-                    />
-                  )}
-                  <p>
-                    <a
-                      href={project.projectUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Projeyi Gör
-                    </a>
-                  </p>
-                  <button onClick={() => removeProject(index)}>Sil</button>
-                </div>
-              ))
-            ) : (
-              <p>Henüz proje eklenmedi</p>
-            )}
-          </div>
-        </div>
-
-        {/* Kaydet Butonu */}
-        <button
-          className="save-btn"
-          onClick={handleSave}
-          style={{ marginTop: "20px" }}
-        >
-          Kaydet
-        </button>
-
-        {message && (
-          <div
-            className="message"
-            style={{
-              color: message.includes("hata") ? "red" : "green",
-              marginTop: "10px",
-            }}
-          >
-            {message}
-          </div>
-        )}
-      </div>
+      <CardForm
+        profileImage={profileImage}
+        setProfileFile={setProfileFile}
+        profileFile={profileFile}
+        backgroundImage={backgroundImage}
+        setBackgroundFile={setBackgroundFile}
+        backgroundFile={backgroundFile}
+        fullName={fullName}
+        setFullName={setFullName}
+        jobTitle={jobTitle}
+        setJobTitle={setJobTitle}
+        about={about}
+        setAbout={setAbout}
+        email={email}
+        setEmail={setEmail}
+        phone={phone}
+        setPhone={setPhone}
+        linkedin={linkedin}
+        setLinkedin={setLinkedin}
+        github={github}
+        setGithub={setGithub}
+        website={website}
+        setWebsite={setWebsite}
+        skills={skills}
+        newSkill={newSkill}
+        setNewSkill={setNewSkill}
+        addSkill={addSkill}
+        removeSkill={removeSkill}
+        projects={projects}
+        newProject={newProject}
+        setNewProject={setNewProject}
+        addProject={addProject}
+        removeProject={removeProject}
+        showProjectForm={showProjectForm}
+        setShowProjectForm={setShowProjectForm}
+        handleSave={handleSave}
+        message={message}
+      />
     </div>
   );
 };

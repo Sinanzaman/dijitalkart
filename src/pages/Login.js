@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import "../CSS/Login.css";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function Login() {
   const { setUser, setTheme } = useUser();
@@ -14,30 +16,37 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        setUser(data.user);
-        console.log("data.user: "+data.user.theme);
-        setTheme(data.user.theme);
-        navigate("/home");
-      } else {
-        setLoginStatus("error");
-      }
-    } catch (error) {
-      alert("Hata: " + error.message);
+  e.preventDefault();
+  setLoginStatus(null);
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    const updateResponse = await fetch("http://localhost:8080/api/auth/update-password", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!updateResponse.ok) {
+      console.warn("Backend şifre güncellemesi başarısız olabilir.");
     }
-  };
+    const response = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+      setUser(data.user);
+      setTheme(data.user.theme);
+      navigate("/home");
+      setLoginStatus("success");
+    } else {
+      setLoginStatus("error");
+    }
+  } catch (firebaseError) {
+    setLoginStatus("error");
+  }
+};
 
   return (
     <div className="login-container">

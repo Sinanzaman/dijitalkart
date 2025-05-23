@@ -5,6 +5,9 @@ import FlipLogo from "../components/FlipLogo";
 import "../CSS/Home.css";
 import { useUser } from "../contexts/UserContext";
 import CardDesign from "../pages/CardDesign";
+import SelectDesign from "./SelectDesign";
+import SearchUser from "./SearchUser";
+import HomeScreen from "./Homescreen";
 
 export default function MainScreen() {
   const navigate = useNavigate();
@@ -26,8 +29,7 @@ export default function MainScreen() {
   const pages = [
     { label: "Kart Bilgilerim", key: "carddesign" },
     { label: "Kart Tasarımlarım", key: "preview" },
-    { label: "Kişilerim", key: "contacts" },
-    { label: "İsteklerim", key: "requests" },
+    { label: "Mesaj İsteklerim", key: "requests" },
     { label: "Kullanıcı Ara", key: "search" },
   ];
 
@@ -64,15 +66,13 @@ export default function MainScreen() {
       case "carddesign":
         return <CardDesign />;
       case "home":
-        return <div>Burada Anasayfa içeriği olabilir.</div>;
+        return <HomeScreen />;
       case "preview":
-        return <div>Kart Önizle sayfası hazırlanıyor.</div>;
-      case "contacts":
-        return <div>Kişilerim sayfası hazırlanıyor.</div>;
+        return <SelectDesign/>;
       case "requests":
         return <div>İsteklerim sayfası hazırlanıyor.</div>;
       case "search":
-        return <div>Kullanıcı Ara sayfası hazırlanıyor.</div>;
+        return <SearchUser />;
       default:
         return <div>Sayfa bulunamadı.</div>;
     }

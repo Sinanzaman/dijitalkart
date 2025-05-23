@@ -3,9 +3,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Backend'den gelen kullanıcı objesi
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState("light");
+  const [cardid, setCardid] = useState(null);
 
   const logout = async () => {
     localStorage.removeItem("token");
@@ -31,8 +32,9 @@ export const UserProvider = ({ children }) => {
         return res.json();
       })
       .then((data) => {
-        setUser(data); // Backend'den dönen user objesi
-        setTheme(data.theme || "light"); // backend'de tema alanı varsa
+        setUser(data);
+        setTheme(data.theme || "light");
+        setCardid(data.cardid || null);
       })
       .catch(() => {
         localStorage.removeItem("token"); // Geçersiz token varsa temizle
@@ -67,7 +69,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, theme, setTheme, toggleTheme, logout }}
+      value={{ user, setUser, loading, theme, setTheme, toggleTheme, logout, cardid }}
     >
       {children}
     </UserContext.Provider>
