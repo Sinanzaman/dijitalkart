@@ -189,7 +189,7 @@ export default function SearchUser() {
                 borderRadius: "4px",
               }}
             >
-              Kişiyi Ekle
+              Kullanıcıyı Ekle
             </button>
           )}
 

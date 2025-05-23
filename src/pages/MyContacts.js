@@ -95,7 +95,7 @@ export default function MyContacts() {
   // Kişi silme fonksiyonu
   const handleRemoveContact = async (contactId) => {
     if (
-      !window.confirm("Bu kişiyi listenizden silmek istediğinize emin misiniz?")
+      !window.confirm("Bu kullanıcıyı listenizden silmek istediğinize emin misiniz?")
     )
       return;
 
@@ -206,7 +206,7 @@ export default function MyContacts() {
               }}
               onClick={() => handleRemoveContact(contact.id)}
             >
-              Kişiyi Sil
+              Kullanıcıyı sil
             </button>
 
             <button
