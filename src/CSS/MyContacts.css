@@ -1,0 +1,135 @@
+.my-contacts-container {
+  height: 80vh;
+  padding: 20px;
+}
+
+.my-contacts-userlist {
+  list-style: none;
+  padding: 0;
+}
+
+.my-contacts-userlist li {
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap; /* Taşma olursa alt satıra geçsin */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.my-contacts-userlist li:hover {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.my-contacts-userlist li strong,
+.my-contacts-userlist li span.email {
+  font-size: 16px;
+}
+
+.my-contacts-userlist li strong {
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+.my-contacts-userlist li .button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.my-contacts-userlist li .button-group button {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.my-contacts-button {
+  margin-left: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.my-contacts-preview {
+  border: 1px solid #007bff;
+  color: #007bff;
+}
+
+.my-contacts-remove {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.my-contacts-message {
+  border: 1px solid #28a745;
+  color: #28a745;
+}
+
+.message-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.message-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.message-modal-content label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.message-modal-content input,
+.message-modal-content textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.message-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-modal-actions button:first-child {
+  margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .my-contacts-userlist li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .my-contacts-userlist li strong {
+    font-size: 18px;
+  }
+
+  /* Email alt alta, biraz boşlukla */
+  .my-contacts-userlist li strong + text,
+  .my-contacts-userlist li strong + span,
+  .my-contacts-userlist li strong + * {
+    margin-bottom: 2px;
+  }
+
+  .my-contacts-userlist li button.my-contacts-button {
+    width: 100%;
+    flex: none;
+  }
+}

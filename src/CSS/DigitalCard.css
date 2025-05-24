@@ -1,4 +1,3 @@
-
 .cardid-container {
   display: flex;
   justify-content: center; /* Ortala */
@@ -69,7 +68,7 @@
 }
 
 
-/* ---- Css 1 ---- */
+/* ----------------------------- Css 1 ----------------------------- */
 .preview1 > * {
   background-color: rgba(255, 255, 255, 0.3);
   padding: 6px 8px;           /* 8px 12px → %70 */
@@ -86,7 +85,7 @@
   transition: all 0.3s ease;
   height: 600px;
   max-height: 600px;          /* 850px → %70 */
-  width: 70%;                 /* Eklendi */
+  width: 80%;                 /* Eklendi */
   margin: 0 auto;
   overflow-y: auto;
 }
@@ -199,17 +198,25 @@
   color: var(--button-hover-color);
 }
 
-/* ---- Css 2 ---- */
+/* ----------------------------- Css 2 ----------------------------- */
+
+.preview2 > * {
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 6px 8px; /* Önce 8px 12px */
+  border-radius: 4px; /* Önce 6px */
+  margin-bottom: 7px; /* Önce 10px */
+  box-shadow: 0 1.5px 3.5px rgba(0,0,0,0.1); /* Önce 0 2px 5px */
+}
 
 .preview2 {
-  width: 70%;
-  margin: 0;
+  width: 80%;
+  margin: 0 auto;
   padding: 14px; /* Önce 20px */
   border-radius: 8px; /* Önce 12px */
   background-color: var(--container-bg);
   box-shadow: var(--box-shadow);
   color: inherit;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
   height: 600px;
   max-height: 600px; /* Önce 750px */
   overflow-y: auto; 
@@ -222,14 +229,6 @@
 .preview2::-webkit-scrollbar-thumb {
   background-color: rgba(100, 100, 100, 0.3);
   border-radius: 4px;
-}
-
-.preview2 > * {
-  background-color: rgba(255, 255, 255, 0.3);
-  padding: 6px 8px; /* Önce 8px 12px */
-  border-radius: 4px; /* Önce 6px */
-  margin-bottom: 7px; /* Önce 10px */
-  box-shadow: 0 1.5px 3.5px rgba(0,0,0,0.1); /* Önce 0 2px 5px */
 }
 
 .preview2 h2,
@@ -366,8 +365,7 @@
   color: var(--button-hover-color);
 }
 
-
-/* ---- Css 3 ---- */
+/* ----------------------------- Css 3 ----------------------------- */
 
 .preview3 {
   display: flex;
@@ -380,7 +378,7 @@
   color: inherit;
   transition: background-color 0.3s ease, color 0.3s ease;
   max-width: 560px;    /* 800px → %70 */
-  width: 70%;          /* Yeni eklendi */
+  width: 80%;          /* Yeni eklendi */
   margin: 0 auto;
   height: 600px;
   max-height: 600px;   /* 750px → %70 */
@@ -547,7 +545,7 @@
   color: var(--button-hover-color);
 }
 
-/* Responsive */
+/* ----------------------------- Responsive ----------------------------- */
 @media (max-width: 768px) {
   /* ---- Css 1 ---- */
   .project-item1 {

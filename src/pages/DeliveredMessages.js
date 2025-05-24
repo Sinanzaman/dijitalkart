@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
+import "../CSS/DeliveredMessages.css";
+import MessageCard from "../components/MessageCard";
 
 export default function DeliveredMessages() {
   const { user } = useUser();
@@ -70,33 +72,15 @@ export default function DeliveredMessages() {
   if (messages.length === 0) return <p>Henüz mesaj göndermediniz.</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {messages.map((msg, index) => (
-          <li
-            key={index} // Eğer mesajda id yoksa index kullanabiliriz
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "15px",
-              marginBottom: "15px",
-              backgroundColor: "#f0f8ff",
-            }}
-          >
-            <h3>{msg.title}</h3>
-            <p>{msg.body}</p>
-            <p>
-              <strong>Alıcı:</strong> {msg.recipientCardId || "Bilinmiyor"}
-            </p>
-            <p style={{ fontSize: "0.9em", color: "#666" }}>
-              Gönderim Tarihi:{" "}
-              {new Date(msg.timestamp).toLocaleString("tr-TR", {
-                dateStyle: "short",
-                timeStyle: "short",
-              })}
-            </p>
-            <button onClick={() => handleDelete(msg.id)}>Sil</button>
-          </li>
+    <div className="delivered-messages-container">
+      <ul className="delivered-messages-list">
+        {messages.map((msg) => (
+          <MessageCard
+            key={msg.id}
+            msg={msg}
+            onDelete={handleDelete}
+            type="sent"
+          />
         ))}
       </ul>
     </div>

@@ -1,0 +1,9 @@
+.container {
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.messageList {
+  list-style: none;
+  padding: 0;
+}

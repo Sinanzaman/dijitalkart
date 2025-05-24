@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../contexts/UserContext";
 import PreviewModal from "../components/PreviewModal";
+import "../CSS/MyContacts.css"; // CSS dosyasını dahil ediyoruz
 
 export default function MyContacts() {
   const [contacts, setContacts] = useState([]);
@@ -10,7 +11,6 @@ export default function MyContacts() {
   const [previewUser, setPreviewUser] = useState(null);
   const [cardData, setCardData] = useState(null);
 
-  // Yeni eklenen state'ler
   const [messageModalOpen, setMessageModalOpen] = useState(false);
   const [messageTitle, setMessageTitle] = useState("");
   const [messageBody, setMessageBody] = useState("");
@@ -18,8 +18,6 @@ export default function MyContacts() {
 
   const { user } = useUser();
   const authToken = localStorage.getItem("token");
-
-  // Kullanıcının kart ID'si (user.cardid varsayımıyla)
   const myCardId = user?.cardid || "";
 
   useEffect(() => {
@@ -55,7 +53,6 @@ export default function MyContacts() {
     fetchContacts();
   }, [user?.id, authToken]);
 
-  // Kart verisini getirme fonksiyonu
   const fetchCardData = async (userId) => {
     try {
       const response = await fetch(
@@ -92,12 +89,8 @@ export default function MyContacts() {
     }
   };
 
-  // Kişi silme fonksiyonu
   const handleRemoveContact = async (contactId) => {
-    if (
-      !window.confirm("Bu kullanıcıyı listenizden silmek istediğinize emin misiniz?")
-    )
-      return;
+    if (!window.confirm("Bu kullanıcıyı listenizden silmek istediğinize emin misiniz?")) return;
 
     try {
       const response = await fetch(
@@ -117,35 +110,30 @@ export default function MyContacts() {
         throw new Error(errorData.message || "Kişi silinemedi");
       }
 
-      // Silme başarılı ise kontakları güncelle
       setContacts((prev) => prev.filter((contact) => contact.id !== contactId));
     } catch (error) {
       alert(error.message);
     }
   };
 
-  // Mesaj gönderme fonksiyonu
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!messageRecipient) return alert("Lütfen bir alıcı seçin.");
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/messages/send",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            senderCardId: myCardId,
-            recipientCardId: messageRecipient.cardid,
-            title: messageTitle,
-            body: messageBody,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:8080/api/messages/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          senderCardId: myCardId,
+          recipientCardId: messageRecipient.cardid,
+          title: messageTitle,
+          body: messageBody,
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -166,26 +154,20 @@ export default function MyContacts() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="my-contacts-container">
       <h2>Eklenen Kişiler</h2>
 
       {contacts.length === 0 && <p>Henüz kişi eklenmemiş.</p>}
 
-      <ul>
+      <ul className="my-contacts-userlist">
         {contacts.map((contact) => (
-          <li key={contact.id} style={{ marginBottom: "15px" }}>
+          <li key={contact.id}>
             <strong>{contact.username}</strong> — {contact.email}
 
+            <div style={{margin: "auto"}}></div>
+
             <button
-              style={{
-                marginLeft: "10px",
-                padding: "6px 10px",
-                cursor: "pointer",
-                borderRadius: "4px",
-                border: "1px solid #007bff",
-                backgroundColor: "#fff",
-                color: "#007bff",
-              }}
+              className="my-contacts-button my-contacts-preview"
               onClick={() => {
                 setPreviewUser(contact);
                 fetchCardData(contact.id);
@@ -195,30 +177,14 @@ export default function MyContacts() {
             </button>
 
             <button
-              style={{
-                marginLeft: "10px",
-                padding: "6px 10px",
-                cursor: "pointer",
-                borderRadius: "4px",
-                border: "1px solid #dc3545",
-                backgroundColor: "#fff",
-                color: "#dc3545",
-              }}
+              className="my-contacts-button my-contacts-remove"
               onClick={() => handleRemoveContact(contact.id)}
             >
               Kullanıcıyı sil
             </button>
 
             <button
-              style={{
-                marginLeft: "10px",
-                padding: "6px 10px",
-                cursor: "pointer",
-                borderRadius: "4px",
-                border: "1px solid #28a745",
-                backgroundColor: "#fff",
-                color: "#28a745",
-              }}
+              className="my-contacts-button my-contacts-message"
               onClick={() => {
                 setMessageRecipient(contact);
                 setMessageModalOpen(true);
@@ -230,7 +196,6 @@ export default function MyContacts() {
         ))}
       </ul>
 
-      {/* Kart önizleme modalı */}
       {cardData && previewOpen && previewUser && (
         <PreviewModal
           cardid={previewUser.cardid || ""}
@@ -258,43 +223,14 @@ export default function MyContacts() {
         />
       )}
 
-      {/* Mesaj gönderme modalı */}
       {messageModalOpen && messageRecipient && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 9999,
-          }}
-        >
-          <form
-            onSubmit={handleSendMessage}
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              width: "90%",
-              maxWidth: "400px",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
-            }}
-          >
+        <div className="message-modal-overlay">
+          <form onSubmit={handleSendMessage} className="message-modal-content">
             <h3>{messageRecipient.username} kullanıcısına mesaj gönder</h3>
 
             <label>
               Gönderen CardId:
-              <input
-                type="text"
-                value={myCardId}
-                readOnly
-                style={{ width: "100%", marginBottom: "10px" }}
-              />
+              <input type="text" value={myCardId} readOnly />
             </label>
 
             <label>
@@ -304,7 +240,6 @@ export default function MyContacts() {
                 required
                 value={messageTitle}
                 onChange={(e) => setMessageTitle(e.target.value)}
-                style={{ width: "100%", marginBottom: "10px" }}
               />
             </label>
 
@@ -314,12 +249,11 @@ export default function MyContacts() {
                 required
                 value={messageBody}
                 onChange={(e) => setMessageBody(e.target.value)}
-                style={{ width: "100%", marginBottom: "10px" }}
                 rows={5}
               />
             </label>
 
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div className="message-modal-actions">
               <button
                 type="button"
                 onClick={() => {
@@ -328,7 +262,6 @@ export default function MyContacts() {
                   setMessageBody("");
                   setMessageRecipient(null);
                 }}
-                style={{ marginRight: "10px" }}
               >
                 İptal
               </button>

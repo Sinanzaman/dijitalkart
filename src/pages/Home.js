@@ -38,9 +38,12 @@ export default function MainScreen() {
     { label: "Gönderilen Mesajlar", key: "delivered_messages" },
     { label: "Kişilerim", key: "mycontacts" },
     { label: "Kullanıcı Ara", key: "search" },
+    {
+      label: `Tema: ${theme === "light" ? "Aydınlık" : "Karanlık"}`,
+      key: "theme",
+    },
+    { label: "Hesap Ayarları", key: "usersettings" },
   ];
-
-  const bottomPages = ["Tema:", "Hesap Ayarları"];
 
   const handleLogout = async () => {
     const confirmed = window.confirm("Çıkış yapmak istediğinize emin misiniz?");
@@ -89,7 +92,7 @@ export default function MainScreen() {
       case "usersettings":
         return <UserSettings />;
       default:
-        return <div>Sayfa bulunamadı.</div>;
+        return <HomeScreen />;
     }
   };
 
@@ -122,7 +125,7 @@ export default function MainScreen() {
           </button>
         </div>
       </div>
-
+      
       {menuOpen && (
         <div className="sidebar">
           <div className="sidebar-separator"></div>
@@ -134,7 +137,15 @@ export default function MainScreen() {
               <button
                 key={key}
                 className={`sidebar-btn ${activePage === key ? "active" : ""}`}
-                onClick={() => handlePageChange(key)}
+                onClick={() => {
+                  if (key === "theme") {
+                    toggleTheme();
+                  } else if (key === "usersettings") {
+                    handlePageChange("usersettings");
+                  } else {
+                    handlePageChange(key);
+                  }
+                }}
               >
                 {label}
                 {isReceivedMessages && unreadMessageCount > 0 && (
@@ -144,45 +155,9 @@ export default function MainScreen() {
             );
           })}
 
-          <div className="sidebar-bottom">
-            {bottomPages.map((page) => {
-              if (page === "Tema:") {
-                return (
-                  <button
-                    key={page}
-                    className="sidebar-btn"
-                    onClick={toggleTheme}
-                  >
-                    Tema: {theme === "light" ? "Aydınlık" : "Karanlık"}
-                  </button>
-                );
-              }
-              if (page === "Hesap Ayarları") {
-                return (
-                  <button
-                    key={page}
-                    className="sidebar-btn"
-                    onClick={() => handlePageChange("usersettings")}
-                  >
-                    {page}
-                  </button>
-                );
-              }
-              return (
-                <button
-                  key={page}
-                  className="sidebar-btn"
-                  onClick={() => alert(`${page} sayfası henüz yapılmadı.`)}
-                >
-                  {page}
-                </button>
-              );
-            })}
-
-            <button className="sidebar-close-btn" onClick={toggleMenu}>
-              Menüyü Kapat
-            </button>
-          </div>
+          <button className="sidebar-close-btn" onClick={toggleMenu}>
+            Menüyü Kapat
+          </button>
         </div>
       )}
 

@@ -69,7 +69,7 @@
 
 /* Sayfa başlığı */
 .page-title {
-  font-weight: 600;
+  font-weight: bold;
   font-size: 20px;
   text-align: left;
 }
@@ -246,5 +246,105 @@
 @keyframes blinker {
   50% {
     opacity: 0;
+  }
+}
+
+/* Mobil için düzenlemeler */
+@media (max-width: 600px) {
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 5px;
+    height: auto; /* ekran boyutuna göre otomatik */
+  }
+
+  /* Logo ve başlık + kullanıcı bilgisi + çıkış butonu dikey sıralama */
+  .logo-container {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    order: 1;
+    margin-bottom: 10px;
+    justify-content: flex-start;
+  }
+
+  .header {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    order: 2;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 10px;
+  }
+
+  .page-title {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  .user-info {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .user-text {
+    text-align: left;
+  }
+
+  .logout-btn {
+    font-size: 30px;
+    padding: 4px 8px;
+  }
+
+  /* Sidebar kaldır, sayfa seçim yatay scroll */
+  .sidebar {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    order: 3;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 15px 0;
+    height: auto !important;
+    box-shadow: none;
+    border-radius: 0;
+    background-color: transparent;
+    border: none;
+    gap: 8px;
+  }
+
+  .sidebar-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 20px;
+  }
+
+  .sidebar-bottom {
+    display: none; /* alt kısımdaki tema ve hesap ayarları menüsünü gizle */
+  }
+
+  /* Menü açma/kapatma butonları mobilde gizli */
+  .sidebar-close-btn,
+  .sidebar-open-btn {
+    display: none;
+  }
+
+  /* İçerik alanı */
+  .content {
+    order: 4;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    padding: 10px 0 20px 0;
+    height: auto;
+    box-shadow: none;
+  }
+
+  .content-with-sidebar,
+  .content-full {
+    grid-column: auto !important;
   }
 }

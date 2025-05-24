@@ -1,8 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useState, useEffect } from "react";
-import "../CSS/CardDesign.css";
+import "../CSS/Designscreen.css";
 import { uploadImageAndReplaceOld } from "../firebase";
-import MyDesigns from "../components/MyDesigns";
+import DigitalCard from "../components/DigitalCard";
 import CardForm from "../components/CardForm";
 import { useUser } from "../contexts/UserContext";
 
@@ -32,6 +32,7 @@ const Designscreen = () => {
     projectUrl: "",
   });
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const API_URL = "http://localhost:8080/api/cards";
 
@@ -41,7 +42,7 @@ const Designscreen = () => {
       if (!token) return;
 
       try {
-        const response = await fetch(`${API_URL}`, {
+        let response = await fetch(`${API_URL}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -61,12 +62,62 @@ const Designscreen = () => {
           setWebsite(data.websiteUrl || "");
           setSkills(data.skills || []);
           setSelectedDesignId(data.selectedDesignId || null);
-          setProjects(data.projects || []); // backend tarafında projects varsa
+          setProjects(data.projects || []);
+        } else if (response.status === 404) {
+          // Kart yok, boş kart oluştur
+          const emptyCard = {
+            cardid,
+            fullName: "",
+            jobTitle: "",
+            about: "",
+            email: "",
+            phone: "",
+            backgroundImageUrl: null,
+            profileImageUrl: null,
+            linkedinUrl: null,
+            githubUrl: null,
+            websiteUrl: null,
+            skills: [],
+            projects: [],
+            selectedDesignId: 1,
+          };
+
+          // POST ile boş kart oluştur
+          const createResponse = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(emptyCard),
+          });
+
+          if (createResponse.ok) {
+            // Kart oluşturulduktan sonra state'i boş kart olarak set et
+            setProfileImage("");
+            setBackgroundImage("");
+            setFullName("");
+            setJobTitle("");
+            setAbout("");
+            setEmail("");
+            setPhone("");
+            setLinkedin("");
+            setGithub("");
+            setWebsite("");
+            setSkills([]);
+            setSelectedDesignId(1);
+            setProjects([]);
+            setMessage("Yeni kart oluşturuldu.");
+          } else {
+            console.error("Boş kart oluşturulamadı.");
+          }
         } else {
           console.error("Kullanıcı kartı getirilemedi.");
         }
       } catch (error) {
         console.error("Kart getirme hatası:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -170,68 +221,72 @@ const Designscreen = () => {
   return (
     <div className="card-page">
       {/* Önizleme Alanı */}
-      <MyDesigns
-        cardid={cardid}
-        profileImage={profileImage}
-        backgroundImage={backgroundImage}
-        profileFile={profileFile}
-        backgroundFile={backgroundFile}
-        fullName={fullName}
-        jobTitle={jobTitle}
-        about={about}
-        email={email}
-        phone={phone}
-        linkedin={linkedin}
-        github={github}
-        website={website}
-        skills={skills}
-        projects={projects}
-        designindex={selectedDesignId}
-      />
+      {!loading && (
+        <DigitalCard
+          cardid={cardid}
+          profileImage={profileImage}
+          backgroundImage={backgroundImage}
+          profileFile={profileFile}
+          backgroundFile={backgroundFile}
+          fullName={fullName}
+          jobTitle={jobTitle}
+          about={about}
+          email={email}
+          phone={phone}
+          linkedin={linkedin}
+          github={github}
+          website={website}
+          skills={skills}
+          projects={projects}
+          designindex={selectedDesignId}
+        />
+      )}
 
       {/* Form Alanı */}
-      <CardForm
-        profileImage={profileImage}
-        setProfileImage={setProfileImage}
-        setProfileFile={setProfileFile}
-        profileFile={profileFile}
-        backgroundImage={backgroundImage}
-        setBackgroundImage={setBackgroundImage}
-        setBackgroundFile={setBackgroundFile}
-        backgroundFile={backgroundFile}
-        fullName={fullName}
-        setFullName={setFullName}
-        jobTitle={jobTitle}
-        setJobTitle={setJobTitle}
-        about={about}
-        setAbout={setAbout}
-        email={email}
-        setEmail={setEmail}
-        phone={phone}
-        setPhone={setPhone}
-        linkedin={linkedin}
-        setLinkedin={setLinkedin}
-        github={github}
-        setGithub={setGithub}
-        website={website}
-        setWebsite={setWebsite}
-        skills={skills}
-        newSkill={newSkill}
-        setSkills={setSkills}
-        setNewSkill={setNewSkill}
-        addSkill={addSkill}
-        removeSkill={removeSkill}
-        projects={projects}
-        setProjects={setProjects}
-        newProject={newProject}
-        setNewProject={setNewProject}
-        addProject={addProject}
-        removeProject={removeProject}
-        showProjectForm={showProjectForm}
-        setShowProjectForm={setShowProjectForm}
-        handleSave={handleSave}
-        message={message}
-      />
+      {!loading && (
+        <CardForm
+          profileImage={profileImage}
+          setProfileImage={setProfileImage}
+          setProfileFile={setProfileFile}
+          profileFile={profileFile}
+          backgroundImage={backgroundImage}
+          setBackgroundImage={setBackgroundImage}
+          setBackgroundFile={setBackgroundFile}
+          backgroundFile={backgroundFile}
+          fullName={fullName}
+          setFullName={setFullName}
+          jobTitle={jobTitle}
+          setJobTitle={setJobTitle}
+          about={about}
+          setAbout={setAbout}
+          email={email}
+          setEmail={setEmail}
+          phone={phone}
+          setPhone={setPhone}
+          linkedin={linkedin}
+          setLinkedin={setLinkedin}
+          github={github}
+          setGithub={setGithub}
+          website={website}
+          setWebsite={setWebsite}
+          skills={skills}
+          newSkill={newSkill}
+          setSkills={setSkills}
+          setNewSkill={setNewSkill}
+          addSkill={addSkill}
+          removeSkill={removeSkill}
+          projects={projects}
+          setProjects={setProjects}
+          newProject={newProject}
+          setNewProject={setNewProject}
+          addProject={addProject}
+          removeProject={removeProject}
+          showProjectForm={showProjectForm}
+          setShowProjectForm={setShowProjectForm}
+          handleSave={handleSave}
+          message={message}
+        />
+      )}
     </div>
   );
 };

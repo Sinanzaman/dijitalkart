@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import MyDesigns from "../components/MyDesigns";
+import DigitalCard from "../components/DigitalCard";
 import "../CSS/SelectDesign.css";
 import PreviewModal from "../components/PreviewModal";
 import { useUser } from "../contexts/UserContext";
@@ -136,47 +136,53 @@ const SelectDesign = () => {
     <div className="selectdesign-container">
       {/* Mevcut seçili kart bilgisi */}
       <div className="current-selected-design">
-        Mevcut Seçili Kart:{" "}
+        Mevcut Seçili Kart Tasarımı:{" "}
         {currentSelectedDesignId !== null
           ? currentSelectedDesignId
-          : "Seçili kart yok"}
+          : "Oluşturulan Kart Bulunamadı"}
       </div>
 
-      {!selectedDesignIndex && <div className="design-grid">
-        {[1, 2, 3].map((index) => (
-          <div key={index} className="design-item">
-            <MyDesigns cardid={cardid} designindex={index} {...designProps} />
+      {!selectedDesignIndex && (
+        <div className="design-grid">
+          {[1, 2, 3].map((index) => (
+            <div key={index} className="design-item">
+              <DigitalCard
+                cardid={cardid}
+                designindex={index}
+                {...designProps}
+              />
 
-            <div className="buttons-row">
-              <button
-                className="preview-button"
-                onClick={() => handleCardClick(index)}
-              >
-                Kartı Önizle
-              </button>
+              <div className="buttons-row">
+                <button
+                  className="preview-button"
+                  onClick={() => handleCardClick(index)}
+                >
+                  Kartı Önizle
+                </button>
 
-              <button
-                className="use-button"
-                onClick={() => handleSaveSelectedDesign(index, index)}
-              >
-                Bu Kartı Kullan
-              </button>
+                <button
+                  className="use-button"
+                  onClick={() => handleSaveSelectedDesign(index, index)}
+                >
+                  Bu Kartı Kullan
+                </button>
+              </div>
+
+              {messages[index] && (
+                <p
+                  className={`message-text ${
+                    messages[index].toLowerCase().includes("hata")
+                      ? "error"
+                      : "success"
+                  }`}
+                >
+                  {messages[index]}
+                </p>
+              )}
             </div>
-
-            {messages[index] && (
-              <p
-                className={`message-text ${
-                  messages[index].toLowerCase().includes("hata")
-                    ? "error"
-                    : "success"
-                }`}
-              >
-                {messages[index]}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>}
+          ))}
+        </div>
+      )}
       <PreviewModal
         cardid={cardid}
         isOpen={selectedDesignIndex !== null}

@@ -1,3 +1,5 @@
+import '../CSS/CardForm.css';
+
 const CardForm = ({
   profileImage,
   setProfileImage,
@@ -177,6 +179,7 @@ const CardForm = ({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="email@example.com"
         />
       </label>
 
@@ -186,6 +189,7 @@ const CardForm = ({
           type="url"
           value={linkedin}
           onChange={(e) => setLinkedin(e.target.value)}
+          placeholder="https://www.linkedin.com/in/"
         />
       </label>
 
@@ -195,6 +199,7 @@ const CardForm = ({
           type="url"
           value={github}
           onChange={(e) => setGithub(e.target.value)}
+          placeholder="https://github.com/"
         />
       </label>
 
@@ -204,6 +209,7 @@ const CardForm = ({
           type="url"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
+          placeholder="https://www.orneksite.com"
         />
       </label>
 
@@ -270,6 +276,7 @@ const CardForm = ({
                 onChange={(e) =>
                   setNewProject({ ...newProject, imageUrl: e.target.value })
                 }
+                placeholder="https://example.com/image.jpg"
               />
             </label>
             <label>
@@ -280,6 +287,7 @@ const CardForm = ({
                 onChange={(e) =>
                   setNewProject({ ...newProject, projectUrl: e.target.value })
                 }
+                placeholder="https://github.com/proje-adi"
               />
             </label>
 

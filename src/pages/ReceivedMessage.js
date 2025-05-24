@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
+import MessageCard from "../components/MessageCard";
+import "../CSS/ReceivedMessages.css";
 
 export default function ReceivedMessages() {
   const {
@@ -31,9 +33,7 @@ export default function ReceivedMessages() {
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Mesajlar alınamadı");
-        }
+        if (!response.ok) throw new Error("Mesajlar alınamadı");
 
         const data = await response.json();
         setMessages(data);
@@ -48,35 +48,22 @@ export default function ReceivedMessages() {
   }, [user?.id, authToken]);
 
   const handleDelete = async (id) => {
-    if (
-      !window.confirm(
-        "Mesajı silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
-      )
-    ) {
-      return;
-    }
+    if (!window.confirm("Mesajı silmek istediğinize emin misiniz?")) return;
 
     try {
       const response = await fetch(`http://localhost:8080/api/messages/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: { Authorization: `Bearer ${authToken}` },
       });
 
-      if (!response.ok) {
-        throw new Error("Mesaj silinemedi");
-      }
+      if (!response.ok) throw new Error("Mesaj silinemedi");
 
-      setMessages((prevMessages) =>
-        prevMessages.filter((msg) => msg.id !== id)
-      );
+      setMessages((prev) => prev.filter((msg) => msg.id !== id));
     } catch (err) {
-      alert(err.message || "Bilinmeyen bir hata oluştu");
+      alert(err.message || "Hata oluştu");
     }
   };
 
-  // Okundu olarak işaretleme fonksiyonu
   const handleMarkAsRead = async (id) => {
     try {
       const response = await fetch(
@@ -91,82 +78,44 @@ export default function ReceivedMessages() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Mesaj okundu olarak işaretlenemedi");
-      }
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === id ? { ...msg, read: true } : msg
-        )
+      if (!response.ok) throw new Error("Okundu olarak işaretlenemedi");
+
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === id ? { ...msg, read: true } : msg))
       );
-      if (unreadMessageCount == 1) {
+
+      if (unreadMessageCount === 1) {
+        setUnreadMessageCount(0);
         setHasUnreadMessages(false);
-        setUnreadMessageCount(unreadMessageCount - 1);
       } else {
-        setUnreadMessageCount(unreadMessageCount - 1);
+        setUnreadMessageCount((prev) => prev - 1);
       }
     } catch (err) {
-      alert(err.message || "Bilinmeyen bir hata oluştu");
+      alert(err.message || "Hata oluştu");
     }
   };
 
-  if (loading) return <p>Mesajlar yükleniyor...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-
-  if (messages.length === 0) return <p>Henüz mesaj almadınız.</p>;
-
   return (
-    <div style={{ padding: "20px" }}>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {messages.map((msg, index) => (
-          <li
-            key={index}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "15px",
-              marginBottom: "15px",
-              backgroundColor: msg.read ? "#f9f9f9" : "#e0f7fa",
-            }}
-          >
-            <h3>{msg.title}</h3>
-            <p>{msg.body}</p>
-            <p>
-              <strong>Gönderen:</strong> {msg.senderCardId || "Bilinmiyor"}
-            </p>
-            <p style={{ fontSize: "0.9em", color: "#666" }}>
-              Gönderim Tarihi:{" "}
-              {new Date(msg.timestamp).toLocaleString("tr-TR", {
-                dateStyle: "short",
-                timeStyle: "short",
-              })}
-            </p>
-
-            <p
-              style={{
-                fontStyle: "italic",
-                color: msg.read ? "green" : "orange",
-              }}
-            >
-              Durum: {msg.read ? "Okundu" : "Okunmadı"}
-            </p>
-
-            {/* Okundu durumu */}
-            {!msg.read && (
-              <button onClick={() => handleMarkAsRead(msg.id)}>
-                Okundu olarak işaretle
-              </button>
-            )}
-
-            <button
-              onClick={() => handleDelete(msg.id)}
-              style={{ marginLeft: "10px" }}
-            >
-              Sil
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="container">
+      {loading ? (
+        <p>Mesajlar yükleniyor...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : messages.length === 0 ? (
+        <p>Henüz mesaj almadınız.</p>
+      ) : (
+        <ul className="messageList">
+          {messages.map((msg) => (
+            <MessageCard
+              key={msg.id}
+              msg={msg}
+              onDelete={handleDelete}
+              onMarkAsRead={handleMarkAsRead}
+              type="inbox"
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

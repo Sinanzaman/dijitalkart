@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaRegCopy } from "react-icons/fa";
 import { QRCodeSVG } from "qrcode.react";
-import "../CSS/CardDesign1.css";
+import "../CSS/DigitalCard.css";
 
-const MyDesigns = ({
+const DigitalCard = ({
   cardid,
   designindex,
   profileImage,
@@ -59,15 +59,15 @@ const MyDesigns = ({
         backgroundRepeat: "no-repeat",
       }}
     >
-      {(profileFile || profileImage) && (
-        <div className={`image-wrapper${designindex}`}>
-          {profileFile ? (
-            <img src={URL.createObjectURL(profileFile)} alt="Profil" />
-          ) : (
-            <img src={profileImage} alt="Profil" />
-          )}
-        </div>
-      )}
+      <div className={`image-wrapper${designindex}`}>
+        {profileFile ? (
+          <img src={URL.createObjectURL(profileFile)} alt="Profil" />
+        ) : profileImage ? (
+          <img src={profileImage} alt="Profil" />
+        ) : (
+          <img src={require('../images/avatar.jpg')} />
+        )}
+      </div>
 
       <h2>{fullName || "Ad Soyad"}</h2>
       <h4>{jobTitle || "İş Pozisyonu"}</h4>
@@ -188,4 +188,4 @@ const MyDesigns = ({
   );
 };
 
-export default MyDesigns;
+export default DigitalCard;

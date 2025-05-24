@@ -17,15 +17,6 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.card-page .preview,
-.card-page .form {
-  background-color: var(--container-bg);
-  box-shadow: var(--box-shadow);
-  padding: 20px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
 .image-wrapper {
   width: 180px;
   height: 180px;
@@ -73,83 +64,6 @@
   display: inline-block;
   margin: 5px 5px 0 0;
   color: inherit;
-}
-
-.card-page .form label {
-  display: block;
-  font-weight: 600;
-  margin-top: 10px;
-}
-
-.card-page .form input,
-.card-page .form textarea {
-  width: 100%;
-  margin-top: 4px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  background-color: white;
-  color: black;
-}
-
-.main-container.dark .card-page .form input,
-.main-container.dark .card-page .form textarea {
-  background-color: #222;
-  color: #eee;
-  border: 1px solid #444;
-}
-
-.card-page .form .skills-input {
-  display: flex;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.card-page .form .skills-badge {
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 5px 5px 0 0;
-  border-radius: 15px;
-  background-color: var(--button-bg);
-  color: var(--button-color);
-  cursor: pointer;
-  font-weight: 500;
-  user-select: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.card-page .form .skills-badge:hover {
-  background-color: var(--button-hover-bg);
-  color: var(--button-hover-color);
-}
-
-.card-page .form button.save-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: var(--button-hover-bg);
-  color: var(--button-hover-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.card-page .form button.save-btn:hover {
-  background-color: var(--button-color);
-  color: var(--button-bg);
-}
-
-.card-page .form button.save-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.card-page .form .message {
-  margin-top: 15px;
-  font-weight: 600;
 }
 
 /* ----------- Proje Kartları Stil ---------- */
@@ -232,10 +146,6 @@
 @media (max-width: 768px) {
   .card-page {
     grid-template-columns: 1fr;
-  }
-
-  .card-page .form {
-    order: 2;
   }
 
   .card-page .preview {

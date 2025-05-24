@@ -15,7 +15,6 @@ export default function UserSettings() {
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  // Ayrı ayrı current password state'leri
   const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState("");
   const [currentPasswordForPassword, setCurrentPasswordForPassword] = useState("");
   const [currentPasswordForDelete, setCurrentPasswordForDelete] = useState("");

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import PreviewModal from "../components/PreviewModal";
 import { useUser } from "../contexts/UserContext";
+import "../CSS/SearchUser.css";
 
 export default function SearchUser() {
   const [cardid, setCardid] = useState("");
@@ -26,27 +27,21 @@ export default function SearchUser() {
         );
 
         const text = await response.text();
-        console.log("Raw response text:", text);
-
         if (text) {
           try {
             const data = JSON.parse(text);
             if (response.ok) {
               setCardData(data);
             } else {
-              console.error("Kart bilgisi alınamadı:", data);
               setCardData(null);
             }
-          } catch (e) {
-            console.error("JSON parse hatası:", e);
+          } catch {
             setCardData(null);
           }
         } else {
-          console.warn("Boş response body");
           setCardData(null);
         }
-      } catch (error) {
-        console.error("Kart verisi getirme hatası:", error);
+      } catch {
         setCardData(null);
       }
     };
@@ -75,8 +70,7 @@ export default function SearchUser() {
         setResult(null);
         setStatus("notfound");
       }
-    } catch (err) {
-      console.error("Hata:", err);
+    } catch {
       setResult(null);
       setStatus("error");
     }
@@ -105,53 +99,32 @@ export default function SearchUser() {
       } else {
         alert(data.message || "Kişi eklenemedi.");
       }
-    } catch (err) {
-      console.error("Hata:", err);
+    } catch {
       alert("Kişi eklenirken bir hata oluştu.");
     }
   };
 
-  const inputWidth = spanRef.current
-    ? `${spanRef.current.offsetWidth + 10}px`
-    : "150px";
-
   return (
-    <div className="search-container" style={{ padding: "20px" }}>
+    <div className="search-container">
       <h2>Kullanıcı Ara</h2>
       <h4>CardID ile diğer kullanıcıları bulun.</h4>
 
-      <div style={{ display: "inline-block", position: "relative" }}>
+      <div className="input-wrapper">
         <input
           type="text"
           placeholder="CardID girin..."
           value={cardid}
           onChange={(e) => setCardid(e.target.value)}
-          style={{
-            padding: "8px",
-            marginRight: "10px",
-            fontSize: "16px",
-            width: inputWidth,
-            minWidth: "150px",
-            maxWidth: "100%",
-            transition: "width 0.2s",
-          }}
+          className="input-field"
         />
-        <span
-          ref={spanRef}
-          style={{
-            position: "absolute",
-            visibility: "hidden",
-            whiteSpace: "pre",
-            fontSize: "16px",
-            padding: "8px",
-            fontFamily: "inherit",
-          }}
-        >
+        <span ref={spanRef} className="hidden-span">
           {cardid || "CardID girin..."}
         </span>
       </div>
 
-      <button onClick={handleSearch}>Ara</button>
+      <button onClick={handleSearch} className="search-button">
+        Ara
+      </button>
 
       {status === "loading" && <p>Aranıyor...</p>}
 
@@ -160,7 +133,7 @@ export default function SearchUser() {
       )}
 
       {status === "success" && result && (
-        <div style={{ marginTop: "20px" }}>
+        <div className="result-section">
           <p>
             <strong>Kullanıcı Adı:</strong> {result.username}
           </p>
@@ -178,17 +151,7 @@ export default function SearchUser() {
           </button>
 
           {currentUserId && result.id !== currentUserId && (
-            <button
-              onClick={handleAddContact}
-              style={{
-                marginLeft: "10px",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                padding: "8px 12px",
-                border: "none",
-                borderRadius: "4px",
-              }}
-            >
+            <button onClick={handleAddContact} className="add-contact-button">
               Kullanıcıyı Ekle
             </button>
           )}
