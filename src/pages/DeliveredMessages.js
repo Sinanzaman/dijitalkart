@@ -6,18 +6,16 @@ import MessageCard from "../components/MessageCard";
 export default function DeliveredMessages() {
   const { user } = useUser();
   const authToken = localStorage.getItem("token");
-
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Bileşen yüklendiğinde gönderilen mesajları API'den çek
     if (!user?.id) return;
-
     const fetchMessages = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const response = await fetch(
           `http://localhost:8080/api/messages/sent/${user.cardid}`,
@@ -27,11 +25,9 @@ export default function DeliveredMessages() {
             },
           }
         );
-
         if (!response.ok) {
           throw new Error("Gönderilen mesajlar alınamadı");
         }
-
         const data = await response.json();
         setMessages(data);
       } catch (err) {
@@ -45,11 +41,11 @@ export default function DeliveredMessages() {
   }, [user?.id, authToken]);
 
   const handleDelete = async (id) => {
+    // Mesaj silme fonksiyonu
     if (
       !window.confirm("Silmek istediğine emin misin? Bu işlem geri alınamaz.")
     )
       return;
-
     try {
       const response = await fetch(`http://localhost:8080/api/messages/${id}`, {
         method: "DELETE",
@@ -57,18 +53,16 @@ export default function DeliveredMessages() {
           Authorization: `Bearer ${authToken}`,
         },
       });
-
       if (!response.ok) throw new Error("Mesaj silinemedi");
-
       setMessages((prev) => prev.filter((msg) => msg.id !== id));
     } catch (err) {
       alert(err.message || "Silme işlemi sırasında hata oluştu");
     }
   };
 
+  // Duruma göre farklı ekranlar göster
   if (loading) return <p>Mesajlar yükleniyor...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-
   if (messages.length === 0) return <p>Henüz mesaj göndermediniz.</p>;
 
   return (

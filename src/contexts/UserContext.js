@@ -11,17 +11,18 @@ export const UserProvider = ({ children }) => {
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   const logout = async () => {
+    // Kullanıcı çıkış işlemi: token'ı sil, kullanıcıyı null yap
     localStorage.removeItem("token");
     setUser(null);
   };
 
   useEffect(() => {
+    // Eğer geçerli bir token varsa, sunucudan kullanıcı bilgilerini çeker.
     const token = localStorage.getItem("token");
     if (!token) {
       setLoading(false);
       return;
     }
-
     fetch("http://localhost:8080/api/auth/user", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,15 +47,16 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // Kullanıcının kart ID'si varsa mesajları kontrol et
     if (user?.cardid) {
       checkUnreadMessages();
     }
   }, [user]);
 
   const checkUnreadMessages = async () => {
+    // Kullanıcının okunmamış mesajlarını kontrol eder
     const token = localStorage.getItem("token");
     if (!token || !user?.cardid) return;
-
     try {
       const res = await fetch(
         `http://localhost:8080/api/messages/received/${user.cardid}`,
@@ -64,14 +66,11 @@ export const UserProvider = ({ children }) => {
           },
         }
       );
-
       if (!res.ok) throw new Error("Mesajlar alınamadı");
-
       const data = await res.json();
       const unreadMessages = data.filter(
         (msg) => msg.read === false || msg.isRead === false
       );
-
       setHasUnreadMessages(unreadMessages.length > 0);
       setUnreadMessageCount(unreadMessages.length);
     } catch (error) {
@@ -82,9 +81,9 @@ export const UserProvider = ({ children }) => {
   };
 
   const toggleTheme = async () => {
+    // Temayı light <-> dark arasında değiştirir
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-
     if (user) {
       const token = localStorage.getItem("token");
       try {

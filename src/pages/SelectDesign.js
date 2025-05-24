@@ -25,6 +25,7 @@ const SelectDesign = () => {
 
   const API_URL = "http://localhost:8080/api/cards";
 
+  // Tasarım bileşenlerine geçilecek ortak props objesi
   const designProps = {
     profileImage,
     backgroundImage,
@@ -41,17 +42,16 @@ const SelectDesign = () => {
   };
 
   useEffect(() => {
+    // Bileşen yüklendiğinde kullanıcının mevcut kart bilgilerini backend'den çek
     const fetchCard = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-
       try {
         const response = await fetch(`${API_URL}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (response.ok) {
           const data = await response.json();
           setProfileImage(data.profileImageUrl || "");
@@ -79,8 +79,8 @@ const SelectDesign = () => {
   }, []);
 
   const handleSaveSelectedDesign = async (newDesignId, index) => {
+    // Kullanıcı bir tasarım seçtiğinde backend'e seçimi güncelleyen fonksiyon
     setMessages((prev) => ({ ...prev, [index]: "" }));
-
     const token = localStorage.getItem("token");
     if (!token) {
       setMessages((prev) => ({
@@ -89,7 +89,6 @@ const SelectDesign = () => {
       }));
       return;
     }
-
     try {
       const response = await fetch(API_URL, {
         method: "PATCH",
@@ -99,7 +98,6 @@ const SelectDesign = () => {
         },
         body: JSON.stringify({ selectedDesignId: newDesignId }),
       });
-
       if (response.ok) {
         setMessages((prev) => ({
           ...prev,
@@ -123,11 +121,13 @@ const SelectDesign = () => {
   };
 
   const handleCardClick = (index) => {
+    // Kart önizleme butonuna basıldığında modalı açar ve seçilen indeksi ayarlar
     setSelectedDesignIndex(index);
     setMessages({});
   };
 
   const closeModal = () => {
+    // Önizleme modalı kapatılırken yapılacaklar
     setSelectedDesignIndex(null);
     setMessages({});
   };

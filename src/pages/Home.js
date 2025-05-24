@@ -21,10 +21,10 @@ export default function MainScreen() {
   const [activePage, setActivePage] = useState("home");
 
   useEffect(() => {
+    // Oturum açmamışsa login sayfasına yönlendir.
     if (!loading && !user) {
       navigate("/login");
     }
-
     const savedPage = localStorage.getItem("activePage");
     if (savedPage) {
       setActivePage(savedPage);
@@ -46,9 +46,9 @@ export default function MainScreen() {
   ];
 
   const handleLogout = async () => {
+    // Kullanıcının çıkış yapmasını sağlayan fonksiyon
     const confirmed = window.confirm("Çıkış yapmak istediğinize emin misiniz?");
     if (!confirmed) return;
-
     try {
       await logout();
       localStorage.removeItem("activePage");
@@ -61,14 +61,17 @@ export default function MainScreen() {
   };
 
   const toggleMenu = () => {
+    // Menü açılıp kapanmasını sağlayan toggle fonksiyonu
     setMenuOpen((prev) => !prev);
   };
 
   const handlePageChange = (key) => {
+    // Menüden sayfa seçildiğinde aktif sayfayı güncelle ve localStorage'a kaydet
     setActivePage(key);
     localStorage.setItem("activePage", key);
   };
 
+  // Eğer kullanıcı bilgisi yükleniyorsa yükleniyor mesajı göster
   if (loading) return <div>Yükleniyor...</div>;
 
   const renderContent = () => {

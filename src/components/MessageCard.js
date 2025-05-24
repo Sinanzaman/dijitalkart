@@ -12,6 +12,7 @@ export default function MessageCard({
   const infoValue = isInbox ? msg.senderCardId : msg.recipientCardId;
 
   const handleCopy = () => {
+    // ID bilgisini panoya kopyalayan fonksiyon
     if (infoValue) {
       navigator.clipboard.writeText(infoValue);
       alert(`${infoLabel} ID kopyalandı!`);

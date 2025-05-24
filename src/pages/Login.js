@@ -16,6 +16,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
+    // Form submit edildiğinde çalışan, Firebase ve backend doğrulaması yapan giriş fonksiyonu.
     e.preventDefault();
     setLoginStatus(null);
     try {

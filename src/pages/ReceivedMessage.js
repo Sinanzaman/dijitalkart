@@ -11,18 +11,16 @@ export default function ReceivedMessages() {
     setHasUnreadMessages,
   } = useUser();
   const authToken = localStorage.getItem("token");
-
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Mesajları sunucudan çeker
     if (!user?.id) return;
-
     const fetchMessages = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const response = await fetch(
           `http://localhost:8080/api/messages/received/${user.cardid}`,
@@ -32,9 +30,7 @@ export default function ReceivedMessages() {
             },
           }
         );
-
         if (!response.ok) throw new Error("Mesajlar alınamadı");
-
         const data = await response.json();
         setMessages(data);
       } catch (err) {
@@ -48,16 +44,14 @@ export default function ReceivedMessages() {
   }, [user?.id, authToken]);
 
   const handleDelete = async (id) => {
+    // Belirtilen mesajı siler ve arayüzü günceller
     if (!window.confirm("Mesajı silmek istediğinize emin misiniz?")) return;
-
     try {
       const response = await fetch(`http://localhost:8080/api/messages/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${authToken}` },
       });
-
       if (!response.ok) throw new Error("Mesaj silinemedi");
-
       setMessages((prev) => prev.filter((msg) => msg.id !== id));
     } catch (err) {
       alert(err.message || "Hata oluştu");
@@ -65,6 +59,7 @@ export default function ReceivedMessages() {
   };
 
   const handleMarkAsRead = async (id) => {
+    // Belirtilen mesajı okundu olarak işaretler ve sayacı günceller
     try {
       const response = await fetch(
         `http://localhost:8080/api/messages/${id}/read`,
@@ -77,13 +72,10 @@ export default function ReceivedMessages() {
           body: JSON.stringify({ read: true }),
         }
       );
-
       if (!response.ok) throw new Error("Okundu olarak işaretlenemedi");
-
       setMessages((prev) =>
         prev.map((msg) => (msg.id === id ? { ...msg, read: true } : msg))
       );
-
       if (unreadMessageCount === 1) {
         setUnreadMessageCount(0);
         setHasUnreadMessages(false);

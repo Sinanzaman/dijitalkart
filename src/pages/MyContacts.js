@@ -4,29 +4,26 @@ import PreviewModal from "../components/PreviewModal";
 import "../CSS/MyContacts.css"; // CSS dosyasını dahil ediyoruz
 
 export default function MyContacts() {
+  const { user } = useUser();
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewUser, setPreviewUser] = useState(null);
   const [cardData, setCardData] = useState(null);
-
   const [messageModalOpen, setMessageModalOpen] = useState(false);
   const [messageTitle, setMessageTitle] = useState("");
   const [messageBody, setMessageBody] = useState("");
   const [messageRecipient, setMessageRecipient] = useState(null);
-
-  const { user } = useUser();
   const authToken = localStorage.getItem("token");
   const myCardId = user?.cardid || "";
 
   useEffect(() => {
+    // Kullanıcı id değiştiğinde kişiler listesini API'den çeker
     if (!user?.id) return;
-
     const fetchContacts = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const response = await fetch(
           `http://localhost:8080/api/auth/user/contacts`,
@@ -36,11 +33,9 @@ export default function MyContacts() {
             },
           }
         );
-
         if (!response.ok) {
           throw new Error("Kişiler getirilemedi");
         }
-
         const data = await response.json();
         setContacts(data);
       } catch (err) {
@@ -49,18 +44,16 @@ export default function MyContacts() {
         setLoading(false);
       }
     };
-
     fetchContacts();
   }, [user?.id, authToken]);
 
   const fetchCardData = async (userId) => {
+    // Belirli kullanıcının kart verisini getirir ve modal açar
     try {
       const response = await fetch(
         `http://localhost:8080/api/cards/user/${userId}`
       );
-
       const text = await response.text();
-
       if (text) {
         try {
           const data = JSON.parse(text);
@@ -90,8 +83,8 @@ export default function MyContacts() {
   };
 
   const handleRemoveContact = async (contactId) => {
+    // Kişi silme işlemi yapar ve state'i günceller
     if (!window.confirm("Bu kullanıcıyı listenizden silmek istediğinize emin misiniz?")) return;
-
     try {
       const response = await fetch(
         "http://localhost:8080/api/auth/user/remove-contact",
@@ -104,12 +97,10 @@ export default function MyContacts() {
           body: JSON.stringify({ contactUserId: contactId }),
         }
       );
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Kişi silinemedi");
       }
-
       setContacts((prev) => prev.filter((contact) => contact.id !== contactId));
     } catch (error) {
       alert(error.message);
@@ -117,9 +108,9 @@ export default function MyContacts() {
   };
 
   const handleSendMessage = async (e) => {
+    // Mesaj gönderme formunu işler ve API çağrısı yapar
     e.preventDefault();
     if (!messageRecipient) return alert("Lütfen bir alıcı seçin.");
-
     try {
       const response = await fetch("http://localhost:8080/api/messages/send", {
         method: "POST",
@@ -134,12 +125,10 @@ export default function MyContacts() {
           body: messageBody,
         }),
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Mesaj gönderilemedi");
       }
-
       alert("Mesaj gönderildi!");
       setMessageModalOpen(false);
       setMessageTitle("");
@@ -150,6 +139,7 @@ export default function MyContacts() {
     }
   };
 
+  // Durumlara göre ekran gösterir
   if (loading) return <p>Yükleniyor...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 

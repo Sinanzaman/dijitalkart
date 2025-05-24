@@ -4,28 +4,26 @@ import { useUser } from "../contexts/UserContext";
 import "../CSS/SearchUser.css";
 
 export default function SearchUser() {
+  const spanRef = useRef();
+  const { user } = useUser();
   const [cardid, setCardid] = useState("");
   const [result, setResult] = useState(null);
   const [status, setStatus] = useState(null);
   const [cardData, setCardData] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(1);
-  const spanRef = useRef();
-
-  const { user } = useUser();
   const currentUserId = user?.id;
 
   const authToken = localStorage.getItem("token");
 
   useEffect(() => {
+    // result değiştiğinde kullanıcının kart bilgilerini backend'den çek
     const fetchCardData = async () => {
       if (!result?.id) return;
-
       try {
         const response = await fetch(
           `http://localhost:8080/api/cards/user/${result.id}`
         );
-
         const text = await response.text();
         if (text) {
           try {
@@ -45,24 +43,21 @@ export default function SearchUser() {
         setCardData(null);
       }
     };
-
     fetchCardData();
   }, [result?.id]);
 
   const handleSearch = async () => {
+    // Kullanıcı CardID ile arama yapar
     if (!cardid.trim()) {
       alert("CardID boş olamaz.");
       return;
     }
-
     setStatus("loading");
-
     try {
       const response = await fetch(
         `http://localhost:8080/api/auth/find-by-cardid/${cardid}`
       );
       const data = await response.json();
-
       if (response.ok) {
         setResult(data);
         setStatus("success");
@@ -77,8 +72,8 @@ export default function SearchUser() {
   };
 
   const handleAddContact = async () => {
+    // Aranan kullanıcıyı kişinin kontak listesine ekler
     if (!currentUserId || !result?.id) return;
-
     try {
       const response = await fetch(
         `http://localhost:8080/api/auth/user/add-contact`,
@@ -91,9 +86,7 @@ export default function SearchUser() {
           body: JSON.stringify({ contactUserId: result.id }),
         }
       );
-
       const data = await response.json();
-
       if (response.ok) {
         alert("Kişi başarıyla eklendi.");
       } else {

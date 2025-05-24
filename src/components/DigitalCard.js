@@ -34,6 +34,7 @@ const DigitalCard = ({
     : about.substring(0, maxLength) + "...";
 
   const copyCardId = () => {
+    // Card ID'yi panoya kopyalayan fonksiyon
     if (!cardid) return;
     navigator.clipboard.writeText(cardid);
     alert("Card ID kopyalandı: " + cardid);

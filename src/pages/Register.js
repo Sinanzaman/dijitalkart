@@ -13,6 +13,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
 
   const validateUsername = (value) => {
+    // Kullanıcı adının geçerli formatta olup olmadığını kontrol eder
     const valid = /^[a-zA-Z0-9_]{1,30}$/.test(value);
     if (!valid) {
       setUsernameError(
@@ -25,13 +26,11 @@ export default function Register() {
   };
 
   const handleRegister = async (e) => {
+    // Kayıt formu gönderildiğinde çağrılır; Firebase ile kullanıcı oluşturur, ardından backend'e kaydeder
     e.preventDefault();
     setRegisterStatus(null);
-
     if (!validateUsername(username)) return;
-
     setLoading(true);
-
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,

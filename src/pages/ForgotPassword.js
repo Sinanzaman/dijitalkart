@@ -11,6 +11,7 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
 
   const handleReset = async (e) => {
+    // Şifre sıfırlama maili gönderme işlemini yapan fonksiyon
     e.preventDefault();
     setMessage(null);
     setError(null);

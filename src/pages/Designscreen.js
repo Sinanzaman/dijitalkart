@@ -37,17 +37,16 @@ const Designscreen = () => {
   const API_URL = "http://localhost:8080/api/cards";
 
   useEffect(() => {
+    // Sayfa yüklendiğinde kullanıcı kartını getir
     const fetchCard = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-
       try {
         let response = await fetch(`${API_URL}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (response.ok) {
           const data = await response.json();
           setProfileImage(data.profileImageUrl || "");
@@ -81,8 +80,7 @@ const Designscreen = () => {
             projects: [],
             selectedDesignId: 1,
           };
-
-          // POST ile boş kart oluştur
+          // POST isteğiyle boş kart oluştur
           const createResponse = await fetch(API_URL, {
             method: "POST",
             headers: {
@@ -91,7 +89,6 @@ const Designscreen = () => {
             },
             body: JSON.stringify(emptyCard),
           });
-
           if (createResponse.ok) {
             // Kart oluşturulduktan sonra state'i boş kart olarak set et
             setProfileImage("");
@@ -125,6 +122,7 @@ const Designscreen = () => {
   }, []);
 
   const addSkill = () => {
+    // Yetenek ekleme
     if (newSkill.trim() !== "" && !skills.includes(newSkill.trim())) {
       setSkills([...skills, newSkill.trim()]);
       setNewSkill("");
@@ -132,10 +130,12 @@ const Designscreen = () => {
   };
 
   const removeSkill = (skillToRemove) => {
+    // Yetenek silme
     setSkills(skills.filter((skill) => skill !== skillToRemove));
   };
 
   const addProject = () => {
+    // Proje ekleme
     if (newProject.title.trim() === "" || newProject.projectUrl.trim() === "") {
       alert("Proje başlığı ve linki zorunludur.");
       return;
@@ -146,19 +146,19 @@ const Designscreen = () => {
   };
 
   const removeProject = (indexToRemove) => {
+    // Proje silme
     if (window.confirm("Bu projeyi silmek istediğinize emin misiniz?")) {
       setProjects(projects.filter((_, index) => index !== indexToRemove));
     }
   };
 
   const handleSave = async () => {
+    // Kartı kaydet
     const token = localStorage.getItem("token");
     const decoded = jwtDecode(token);
     const userId = decoded.userId ?? decoded.sub;
-
     let uploadedProfileUrl = profileImage;
     let uploadedBackgroundUrl = backgroundImage;
-
     try {
       // Seçili dosya varsa yükle
       if (profileFile) {
@@ -180,6 +180,7 @@ const Designscreen = () => {
       return;
     }
 
+    // Güncellenecek kart verisi
     const cardData = {
       cardid,
       fullName,
@@ -206,7 +207,6 @@ const Designscreen = () => {
         },
         body: JSON.stringify(cardData),
       });
-
       if (response.ok) {
         setMessage("Kart başarıyla kaydedildi!");
       } else {

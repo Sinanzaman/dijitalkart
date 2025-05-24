@@ -14,17 +14,18 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-
+// Firebase uygulamasını başlatır
 const app = initializeApp(firebaseConfig);
+
+// Firestore veritabanını ve diğer servisleri başlatıp dışa aktarır
 export const db = getFirestore();
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
 export const uploadImageAndReplaceOld = async (userId, file, type) => {
-  const filePath = `users/${userId}/${type}.jpg`; // type = profilePhoto ya da backgroundPhoto
+  // Yüklenen resmi yoksa ekler varsa günceller
+  const filePath = `users/${userId}/${type}.jpg`;
   const fileRef = ref(storage, filePath);
-
-  // Önce varsa eski dosyayı sil
   try {
     await deleteObject(fileRef);
     console.log("Eski dosya silindi:", filePath);
@@ -33,8 +34,6 @@ export const uploadImageAndReplaceOld = async (userId, file, type) => {
       throw err; // bilinmeyen hataysa patlat
     }
   }
-
-  // Yeni dosyayı yükle
   await uploadBytes(fileRef, file);
   const url = await getDownloadURL(fileRef);
   return url;

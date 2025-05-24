@@ -11,25 +11,23 @@ import "../CSS/UserSettings.css";
 
 export default function UserSettings() {
   const user = auth.currentUser;
-
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-
   const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState("");
   const [currentPasswordForPassword, setCurrentPasswordForPassword] = useState("");
   const [currentPasswordForDelete, setCurrentPasswordForDelete] = useState("");
-
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const reauthenticate = async (password) => {
+    // Firebase ile kullanıcıyı mevcut şifresiyle yeniden doğrulayan fonksiyon
     if (!user || !user.email) throw new Error("Kullanıcı bulunamadı");
-
     const credential = EmailAuthProvider.credential(user.email, password);
     await reauthenticateWithCredential(user, credential);
   };
 
   const handleChangeEmail = async () => {
+    // E-posta güncelleme işlemi
     setMessage("");
     setError("");
     try {
@@ -44,6 +42,7 @@ export default function UserSettings() {
   };
 
   const handleChangePassword = async () => {
+    // Şifre güncelleme işlemi
     setMessage("");
     setError("");
     try {
@@ -58,13 +57,12 @@ export default function UserSettings() {
   };
 
   const handleDeleteAccount = async () => {
+    // Hesap silme işlemi
     setMessage("");
     setError("");
-
     if (!window.confirm("Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.")) {
       return;
     }
-
     try {
       await reauthenticate(currentPasswordForDelete);
       await deleteUser(user);
@@ -75,6 +73,7 @@ export default function UserSettings() {
     }
   };
 
+  // Eğer kullanıcı oturumu açık değilse mesaj göster
   if (!user) return <p className="user-settings-message">Kullanıcı oturumu açık değil.</p>;
 
   return (
