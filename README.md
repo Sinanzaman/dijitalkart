@@ -70,12 +70,12 @@ git clone https://github.com/Sinanzaman/dijitalkart.git
 - Herhangi bir sorunla karşılaşırsanız, bağımlılıkların doğru yüklendiğini ve ortam değişkenlerinin doğru ayarlandığını kontrol edin.
 
 
+
 ***
 ***
 ***
 
-## Projenin Amacı ve Kapsamı
-DijitalKart, kullanıcıların dijital kartvizitlerini oluşturmasını, düzenlemesini ve paylaşmasını sağlayan bir platform sunar. Çevre dostu bir çözüm olarak, fiziksel kartvizitlerin yerini alarak hem pratik hem de modern bir deneyim sunmayı amaçlar.
+
 
 ## Çalışma Prensipleri
 - **Modüler ve Ayrık Yapı**: Uygulama, frontend (React) ve backend (Spring Boot) olarak katmanlı ve modüler bir şekilde geliştirilmiştir. Bu yapı, geliştirme sürecini hızlandırırken bakım ve ölçeklendirme işlemlerini kolaylaştırır.
