@@ -68,3 +68,41 @@ git clone https://github.com/Sinanzaman/dijitalkart.git
 - Backend ve frontend'in aynı anda çalıştığından emin olun.
 - Veritabanı bağlantı ayarlarını doğru şekilde yapılandırdığınızdan emin olun.
 - Herhangi bir sorunla karşılaşırsanız, bağımlılıkların doğru yüklendiğini ve ortam değişkenlerinin doğru ayarlandığını kontrol edin.
+
+
+# DijitalKart
+
+DijitalKart, kullanıcıların dijital kartvizitlerini kolayca oluşturup yönetebileceği ve istedikleri kişilerle hızlıca paylaşabileceği modern, kullanıcı dostu bir web uygulamasıdır. Fiziksel kartvizit kullanımının yerini çevre dostu bir dijital alternatifle değiştirmeyi hedefler.
+
+## Projenin Amacı ve Kapsamı
+DijitalKart, kullanıcıların dijital kartvizitlerini oluşturmasını, düzenlemesini ve paylaşmasını sağlayan bir platform sunar. Çevre dostu bir çözüm olarak, fiziksel kartvizitlerin yerini alarak hem pratik hem de modern bir deneyim sunmayı amaçlar.
+
+## Çalışma Prensipleri
+- **Modüler ve Ayrık Yapı**: Uygulama, frontend (React) ve backend (Spring Boot) olarak katmanlı ve modüler bir şekilde geliştirilmiştir. Bu yapı, geliştirme sürecini hızlandırırken bakım ve ölçeklendirme işlemlerini kolaylaştırır.
+- **Veri Güvenliği ve Tutarlılığı**: Kullanıcı verilerinin güvenliği önceliklidir. PostgreSQL veritabanı ile sağlam veri yönetimi ve tutarlılık sağlanmıştır.
+- **RESTful API Tasarımı**: Backend, REST mimarisine uygun olarak tasarlanmıştır. Bu, frontend ve backend’in bağımsız geliştirilmesini ve entegrasyonunu mümkün kılar.
+- **Kullanıcı Deneyimi**: React ile oluşturulan responsive ve hızlı arayüz, kullanıcıların kartvizit oluşturma, düzenleme ve paylaşma süreçlerinde akıcı bir deneyim sunar.
+- **Yerel Geliştirme ve Test**: Frontend ve backend bileşenleri, yerel ortamda bağımsız olarak test edilerek uygulamanın stabilitesi garanti altına alınmıştır.
+
+## Geliştirme Süreci
+1. **İhtiyaç Analizi ve Planlama**: Projenin temel hedefleri ve kullanıcı ihtiyaçları detaylı bir şekilde analiz edilmiştir.
+2. **Teknoloji Seçimi**:
+   - **Backend**: Java 17 ve Spring Boot, modern, güvenilir ve ölçeklenebilir bir API altyapısı sağlamak için seçilmiştir.
+   - **Veritabanı**: Performanslı ve SQL standartlarına uygun PostgreSQL tercih edilmiştir.
+   - **Frontend**: Hızlı, dinamik ve geliştirilmesi kolay bir kullanıcı arayüzü için React kullanılmıştır.
+3. **Versiyon Kontrol**: Proje, Git ile yönetilerek kod takibi ve takım çalışması kolaylaştırılmıştır.
+4. **Sürüm ve Bağımlılık Yönetimi**: Backend’de Maven, frontend’de npm ile bağımlılıklar yönetilmiş ve derleme süreçleri otomatize edilmiştir.
+5. **Entegrasyon ve Test**: Frontend ve backend arasındaki veri alışverişi, REST API’lar üzerinden sıkı testlere tabi tutulmuştur.
+
+## Teknoloji ve Tasarım Tercihleri
+- **Java 17 ve Spring Boot**: Güncel Java sürümünün stabilitesi ve Spring Boot’un hızlı geliştirme olanakları projeye güç katar.
+- **PostgreSQL**: Güvenilir, ölçeklenebilir ve SQL standartlarına uygun yapısıyla veri yönetimi için ideal bir seçimdir.
+- **React**: Component tabanlı yapısı, geniş topluluğu ve kolay öğrenilebilirliği ile dinamik ve responsive bir kullanıcı arayüzü sağlar.
+- **Maven & npm**: Backend ve frontend bağımlılıklarını kolayca yönetmek ve derleme süreçlerini otomatikleştirmek için kullanılmıştır.
+- **REST API**: Frontend ve backend arasındaki iletişimi standartlaştırmış ve gelecekte farklı istemcilerle entegrasyonu kolaylaştırmıştır.
+
+## Gelecek Planları
+- Mobil uyumluluk ve responsive tasarımın daha da geliştirilmesi,
+- Kullanıcı profili ve kart paylaşım seçeneklerinin zenginleştirilmesi,
+- Güvenlik iyileştirmeleri ve performans optimizasyonları,
+- Bulut tabanlı senkronizasyon ve yedekleme özelliklerinin eklenmesi.
