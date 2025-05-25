@@ -10,6 +10,8 @@ export const UserProvider = ({ children }) => {
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const logout = async () => {
     // Kullanıcı çıkış işlemi: token'ı sil, kullanıcıyı null yap
     localStorage.removeItem("token");
@@ -23,7 +25,7 @@ export const UserProvider = ({ children }) => {
       setLoading(false);
       return;
     }
-    fetch("http://localhost:8080/api/auth/user", {
+    fetch(`${API_URL}/api/auth/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -59,7 +61,7 @@ export const UserProvider = ({ children }) => {
     if (!token || !user?.cardid) return;
     try {
       const res = await fetch(
-        `http://localhost:8080/api/messages/received/${user.cardid}`,
+        `${API_URL}/api/messages/received/${user.cardid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,7 +89,7 @@ export const UserProvider = ({ children }) => {
     if (user) {
       const token = localStorage.getItem("token");
       try {
-        await fetch("http://localhost:8080/api/auth/user/theme", {
+        await fetch(`${API_URL}/api/auth/user/theme`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

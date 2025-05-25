@@ -14,6 +14,8 @@ export default function SearchUser() {
   const [previewIndex, setPreviewIndex] = useState(1);
   const currentUserId = user?.id;
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const authToken = localStorage.getItem("token");
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function SearchUser() {
       if (!result?.id) return;
       try {
         const response = await fetch(
-          `http://localhost:8080/api/cards/user/${result.id}`
+          `${API_URL}/api/cards/user/${result.id}`
         );
         const text = await response.text();
         if (text) {
@@ -55,7 +57,7 @@ export default function SearchUser() {
     setStatus("loading");
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/find-by-cardid/${cardid}`
+        `${API_URL}/api/auth/find-by-cardid/${cardid}`
       );
       const data = await response.json();
       if (response.ok) {
@@ -76,7 +78,7 @@ export default function SearchUser() {
     if (!currentUserId || !result?.id) return;
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/user/add-contact`,
+        `${API_URL}/api/auth/user/add-contact`,
         {
           method: "POST",
           headers: {

@@ -12,6 +12,8 @@ export default function Register() {
   const [usernameError, setUsernameError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const validateUsername = (value) => {
     // Kullanıcı adının geçerli formatta olup olmadığını kontrol eder
     const valid = /^[a-zA-Z0-9_]{1,30}$/.test(value);
@@ -37,7 +39,7 @@ export default function Register() {
         email,
         password
       );
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

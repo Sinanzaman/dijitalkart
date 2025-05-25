@@ -10,6 +10,8 @@ export default function DeliveredMessages() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // Bileşen yüklendiğinde gönderilen mesajları API'den çek
     if (!user?.id) return;
@@ -18,7 +20,7 @@ export default function DeliveredMessages() {
       setError(null);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/messages/sent/${user.cardid}`,
+          `${API_URL}/api/messages/sent/${user.cardid}`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -47,7 +49,7 @@ export default function DeliveredMessages() {
     )
       return;
     try {
-      const response = await fetch(`http://localhost:8080/api/messages/${id}`, {
+      const response = await fetch(`${API_URL}/api/messages/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${authToken}`,

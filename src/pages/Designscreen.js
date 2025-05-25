@@ -34,7 +34,9 @@ const Designscreen = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const API_URL = "http://localhost:8080/api/cards";
+
+  const API_URL_ = process.env.REACT_APP_API_URL;
+  const API_URL = `${API_URL_}/api/cards`;
 
   useEffect(() => {
     // Sayfa yüklendiğinde kullanıcı kartını getir

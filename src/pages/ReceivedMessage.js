@@ -15,6 +15,8 @@ export default function ReceivedMessages() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // Mesajları sunucudan çeker
     if (!user?.id) return;
@@ -23,7 +25,7 @@ export default function ReceivedMessages() {
       setError(null);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/messages/received/${user.cardid}`,
+          `${API_URL}/api/messages/received/${user.cardid}`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -47,7 +49,7 @@ export default function ReceivedMessages() {
     // Belirtilen mesajı siler ve arayüzü günceller
     if (!window.confirm("Mesajı silmek istediğinize emin misiniz?")) return;
     try {
-      const response = await fetch(`http://localhost:8080/api/messages/${id}`, {
+      const response = await fetch(`${API_URL}/api/messages/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${authToken}` },
       });
@@ -62,7 +64,7 @@ export default function ReceivedMessages() {
     // Belirtilen mesajı okundu olarak işaretler ve sayacı günceller
     try {
       const response = await fetch(
-        `http://localhost:8080/api/messages/${id}/read`,
+        `${API_URL}/api/messages/${id}/read`,
         {
           method: "PATCH",
           headers: {

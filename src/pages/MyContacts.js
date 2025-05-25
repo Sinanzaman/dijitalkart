@@ -18,6 +18,8 @@ export default function MyContacts() {
   const authToken = localStorage.getItem("token");
   const myCardId = user?.cardid || "";
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // Kullanıcı id değiştiğinde kişiler listesini API'den çeker
     if (!user?.id) return;
@@ -26,7 +28,7 @@ export default function MyContacts() {
       setError(null);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/auth/user/contacts`,
+          `${API_URL}/api/auth/user/contacts`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -51,7 +53,7 @@ export default function MyContacts() {
     // Belirli kullanıcının kart verisini getirir ve modal açar
     try {
       const response = await fetch(
-        `http://localhost:8080/api/cards/user/${userId}`
+        `${API_URL}/api/cards/user/${userId}`
       );
       const text = await response.text();
       if (text) {
@@ -87,7 +89,7 @@ export default function MyContacts() {
     if (!window.confirm("Bu kullanıcıyı listenizden silmek istediğinize emin misiniz?")) return;
     try {
       const response = await fetch(
-        "http://localhost:8080/api/auth/user/remove-contact",
+        `${API_URL}/api/auth/user/remove-contact`,
         {
           method: "DELETE",
           headers: {
@@ -112,7 +114,7 @@ export default function MyContacts() {
     e.preventDefault();
     if (!messageRecipient) return alert("Lütfen bir alıcı seçin.");
     try {
-      const response = await fetch("http://localhost:8080/api/messages/send", {
+      const response = await fetch(`${API_URL}/api/messages/send`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

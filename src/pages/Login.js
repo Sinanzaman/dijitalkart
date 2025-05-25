@@ -15,13 +15,15 @@ export default function Login() {
   const [showInfoPanel, setShowInfoPanel] = useState(false);
   const navigate = useNavigate();
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleLogin = async (e) => {
     // Form submit edildiğinde çalışan, Firebase ve backend doğrulaması yapan giriş fonksiyonu.
     e.preventDefault();
     setLoginStatus(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      const updateResponse = await fetch("http://localhost:8080/api/auth/update-password", {
+      const updateResponse = await fetch(`${API_URL}/api/auth/update-password`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -29,7 +31,7 @@ export default function Login() {
       if (!updateResponse.ok) {
         console.warn("Backend şifre güncellemesi başarısız olabilir.");
       }
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

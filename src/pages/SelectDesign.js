@@ -23,7 +23,8 @@ const SelectDesign = () => {
 
   const [messages, setMessages] = useState({});
 
-  const API_URL = "http://localhost:8080/api/cards";
+  const API_URL_ = process.env.REACT_APP_API_URL;
+  const API_URL = `${API_URL_}/api/cards`;
 
   // Tasarım bileşenlerine geçilecek ortak props objesi
   const designProps = {
