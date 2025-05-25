@@ -50,7 +50,7 @@ git clone https://github.com/Sinanzaman/dijitalkart.git
 
 ### 4. Frontend Kurulumu ve Çalıştırılması
 1. Frontend dizinine gidin:
-(Mevcut ana dizin)
+(Proje ana dizini)
 2. Gerekli modülleri yükleyin:
    ```bash
    npm install
