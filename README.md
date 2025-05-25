@@ -70,9 +70,9 @@ git clone https://github.com/Sinanzaman/dijitalkart.git
 - Herhangi bir sorunla karşılaşırsanız, bağımlılıkların doğru yüklendiğini ve ortam değişkenlerinin doğru ayarlandığını kontrol edin.
 
 
-# DijitalKart
-
-DijitalKart, kullanıcıların dijital kartvizitlerini kolayca oluşturup yönetebileceği ve istedikleri kişilerle hızlıca paylaşabileceği modern, kullanıcı dostu bir web uygulamasıdır. Fiziksel kartvizit kullanımının yerini çevre dostu bir dijital alternatifle değiştirmeyi hedefler.
+***
+***
+***
 
 ## Projenin Amacı ve Kapsamı
 DijitalKart, kullanıcıların dijital kartvizitlerini oluşturmasını, düzenlemesini ve paylaşmasını sağlayan bir platform sunar. Çevre dostu bir çözüm olarak, fiziksel kartvizitlerin yerini alarak hem pratik hem de modern bir deneyim sunmayı amaçlar.
