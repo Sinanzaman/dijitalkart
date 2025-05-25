@@ -106,3 +106,11 @@ git clone https://github.com/Sinanzaman/dijitalkart.git
 - Kullanıcı profili ve kart paylaşım seçeneklerinin zenginleştirilmesi,
 - Güvenlik iyileştirmeleri ve performans optimizasyonları,
 - Bulut tabanlı senkronizasyon ve yedekleme özelliklerinin eklenmesi.
+
+***
+***
+***
+
+# Proje Görüntüleri
+
+![Screenshot_2](https://github.com/user-attachments/assets/8ab84e33-297f-4c0e-bed2-88e1f566a8c8)
