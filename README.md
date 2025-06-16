@@ -1,70 +1,132 @@
-# Getting Started with Create React App
+# DijitalKart
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+DijitalKart, dijital kartvizitlerinizi kolayca oluşturabileceğiniz, paylaşabileceğiniz ve yönetebileceğiniz yenilikçi bir web uygulamasıdır.
 
-## Available Scripts
+## Teknolojiler
+- **Frontend**: React
+- **Backend**: Java Spring Boot
+- **Veritabanı**: PostgreSQL
+- **Diğer**:
+  - Maven (Backend için)
+  - Node.js ve npm (Frontend için)
 
-In the project directory, you can run:
+## Önkoşullar
+- Java 17+ sürüm
+- Maven
+- Node.js ve npm
+- PostgreSQL veritabanı
+- Git
 
-### `npm start`
+## Kurulum ve Çalıştırma
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Proje Dosyalarını Kopyalayın
+Proje dosyalarını yerel makinenize kopyalamak için aşağıdaki komutu kullanın:
+```bash
+git clone https://github.com/Sinanzaman/dijitalkart.git
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. PostgreSQL Veritabanını Oluşturun
+- **PgAdmin 4** (isteğe bağlı) kullanarak `mydb` adında bir veritabanı oluşturun (projede kullanılan varsayılan isim).
+- Gerekirse kullanıcı ve yetki ataması yapın.
 
-### `npm test`
+### 3. Backend Kurulumu ve Çalıştırılması
+1. Backend dizinine gidin:
+   ```bash
+   cd ./backend/
+   ```
+2. `application.properties` veya `application.yml` dosyasını açın ve PostgreSQL bağlantı bilgilerini güncelleyin:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/mydb
+   spring.datasource.username=postgres_kullanici
+   spring.datasource.password=sifre
+   spring.jpa.hibernate.ddl-auto=update
+   ```
+3. Maven ile projeyi derleyin ve çalıştırın:
+   ```bash
+   ./mvnw clean install
+   ./mvnw spring-boot:run
+   ```
+   Backend sunucusu varsayılan olarak `http://localhost:8080` adresinde çalışacaktır.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 4. Frontend Kurulumu ve Çalıştırılması
+1. Frontend dizinine gidin:
+(Proje ana dizini)
+2. Gerekli modülleri yükleyin:
+   ```bash
+   npm install
+   ```
+3. `node_modules` klasörünün dizine eklendiğinden emin olun.
+4. Frontend'i başlatın:
+   ```bash
+   npm start
+   ```
+   Frontend varsayılan olarak `http://localhost:3000` adresinde çalışacaktır.
 
-### `npm run build`
+## Notlar
+- Backend ve frontend'in aynı anda çalıştığından emin olun.
+- Veritabanı bağlantı ayarlarını doğru şekilde yapılandırdığınızdan emin olun.
+- Herhangi bir sorunla karşılaşırsanız, bağımlılıkların doğru yüklendiğini ve ortam değişkenlerinin doğru ayarlandığını kontrol edin.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+***
+***
+***
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Çalışma Prensipleri
+- **Modüler ve Ayrık Yapı**: Uygulama, frontend (React) ve backend (Spring Boot) olarak katmanlı ve modüler bir şekilde geliştirilmiştir. Bu yapı, geliştirme sürecini hızlandırırken bakım ve ölçeklendirme işlemlerini kolaylaştırır.
+- **Veri Güvenliği ve Tutarlılığı**: Kullanıcı verilerinin güvenliği önceliklidir. PostgreSQL veritabanı ile sağlam veri yönetimi ve tutarlılık sağlanmıştır.
+- **RESTful API Tasarımı**: Backend, REST mimarisine uygun olarak tasarlanmıştır. Bu, frontend ve backend’in bağımsız geliştirilmesini ve entegrasyonunu mümkün kılar.
+- **Kullanıcı Deneyimi**: React ile oluşturulan responsive ve hızlı arayüz, kullanıcıların kartvizit oluşturma, düzenleme ve paylaşma süreçlerinde akıcı bir deneyim sunar.
+- **Yerel Geliştirme ve Test**: Frontend ve backend bileşenleri, yerel ortamda bağımsız olarak test edilerek uygulamanın stabilitesi garanti altına alınmıştır.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Geliştirme Süreci
+1. **İhtiyaç Analizi ve Planlama**: Projenin temel hedefleri ve kullanıcı ihtiyaçları detaylı bir şekilde analiz edilmiştir.
+2. **Teknoloji Seçimi**:
+   - **Backend**: Java 17 ve Spring Boot, modern, güvenilir ve ölçeklenebilir bir API altyapısı sağlamak için seçilmiştir.
+   - **Veritabanı**: Performanslı ve SQL standartlarına uygun PostgreSQL tercih edilmiştir.
+   - **Frontend**: Hızlı, dinamik ve geliştirilmesi kolay bir kullanıcı arayüzü için React kullanılmıştır.
+3. **Versiyon Kontrol**: Proje, Git ile yönetilerek kod takibi ve takım çalışması kolaylaştırılmıştır.
+4. **Sürüm ve Bağımlılık Yönetimi**: Backend’de Maven, frontend’de npm ile bağımlılıklar yönetilmiş ve derleme süreçleri otomatize edilmiştir.
+5. **Entegrasyon ve Test**: Frontend ve backend arasındaki veri alışverişi, REST API’lar üzerinden sıkı testlere tabi tutulmuştur.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Teknoloji ve Tasarım Tercihleri
+- **Java 17 ve Spring Boot**: Güncel Java sürümünün stabilitesi ve Spring Boot’un hızlı geliştirme olanakları projeye güç katar.
+- **PostgreSQL**: Güvenilir, ölçeklenebilir ve SQL standartlarına uygun yapısıyla veri yönetimi için ideal bir seçimdir.
+- **React**: Component tabanlı yapısı, geniş topluluğu ve kolay öğrenilebilirliği ile dinamik ve responsive bir kullanıcı arayüzü sağlar.
+- **Maven & npm**: Backend ve frontend bağımlılıklarını kolayca yönetmek ve derleme süreçlerini otomatikleştirmek için kullanılmıştır.
+- **REST API**: Frontend ve backend arasındaki iletişimi standartlaştırmış ve gelecekte farklı istemcilerle entegrasyonu kolaylaştırmıştır.
 
-## Learn More
+## Gelecek Planları
+- Mobil uyumluluk ve responsive tasarımın daha da geliştirilmesi,
+- Kullanıcı profili ve kart paylaşım seçeneklerinin zenginleştirilmesi,
+- Güvenlik iyileştirmeleri ve performans optimizasyonları,
+- Bulut tabanlı senkronizasyon ve yedekleme özelliklerinin eklenmesi.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+***
+***
+***
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Proje Görüntüleri
 
-### Code Splitting
+![Screenshot_2](https://github.com/user-attachments/assets/8ab84e33-297f-4c0e-bed2-88e1f566a8c8)
+***
+![Screenshot_3](https://github.com/user-attachments/assets/6eea0f0e-5d93-46f4-9351-bae61405c47e)
+***
+![Screenshot_4](https://github.com/user-attachments/assets/4cd8098b-bbbe-4baa-997b-288eaf2ed380)
+***
+![Screenshot_5](https://github.com/user-attachments/assets/d1274eff-b623-45df-a200-39abcdcb1465)
+***
+![Screenshot_6](https://github.com/user-attachments/assets/6c521651-df2d-4cdd-8161-39d4e3c49908)
+***
+![Screenshot_7](https://github.com/user-attachments/assets/0c5c6f0d-fbdb-492c-b6d1-a52e2ec26560)
+***
+![Screenshot_8](https://github.com/user-attachments/assets/02551a4b-5a09-4626-9ba4-48d7450d814b)
+***
+![Screenshot_9](https://github.com/user-attachments/assets/525a48f8-1372-41e7-bb32-855c57c5ba43)
+***
+![Screenshot_10](https://github.com/user-attachments/assets/a0ca0381-e83c-4ce7-90fd-854f680481d1)
+***
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
