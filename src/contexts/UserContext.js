@@ -6,7 +6,6 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState("light");
-  const [cardid, setCardid] = useState(null);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
@@ -37,7 +36,6 @@ export const UserProvider = ({ children }) => {
       .then((data) => {
         setUser(data);
         setTheme(data.theme || "light");
-        setCardid(data.cardid || null);
       })
       .catch(() => {
         localStorage.removeItem("token");
@@ -113,7 +111,7 @@ export const UserProvider = ({ children }) => {
         setTheme,
         toggleTheme,
         logout,
-        cardid,
+        cardid: user?.cardid,
         hasUnreadMessages,
         setHasUnreadMessages,
         unreadMessageCount,
